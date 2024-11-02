@@ -4,6 +4,7 @@ import pokemon.Map;
 import pokemon.Map.chunk;
 import pokemon.game;
 import pokemon.Poke;
+import pokemon.Item;
 
 
 public class Collection {
@@ -51,6 +52,9 @@ public class Collection {
 			}
 		}
 	}
+	
+	
+	
 }
 
 

@@ -5,9 +5,11 @@ import java.util.Scanner;
 import pokemon.Map;
 import pokemon.Poke;
 import pokemon.Player;
+import pokemon.Collection;
 
 class game {
 	public static void main(String[] args) {
+		
 		String input = "";
 		Scanner scan = new Scanner(System.in);
 		Player user = new Player();
@@ -17,11 +19,14 @@ class game {
 		smallMap.setChunkValues("World1");
 		Tutorial.tutorial(user, smallMap);
 		user.collection.printPokemon();
+		ItemShopDatabase itemshop = new ItemShopDatabase();
+		Backpack backpack = new Backpack();
 		String currMap;
 		String currSize;
 		System.out.print(" has been added to the party!");
 		input = scan.next();
 		user.customize();
+		System.out.println(itemshop.getItemDescription("PokeBall"));
 		spaces();
 		//load chunks -> print map -> take input -> repeat
 		while(true) {
@@ -47,7 +52,7 @@ class game {
 
 			//handles the input provided by user, which is processed and influences the chunks and printing of the map (takeInput leads to backbone of game)
 			input = scan.next();
-			smallMap.takeInput(input, user, currMap);
+			smallMap.takeInput(input, user, currMap, Map.mapSize);
 			if(input.equals("o"))break;
 		}
 		scan.close();

@@ -5,42 +5,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 import pokemon.game;
-
-class Item {
-	String name;
-	int amount;
-	
-	Item(String name, int amount){
-		this.name = name;
-		this.amount = amount;
-	}
-}
+import pokemon.Item;
+import pokemon.Backpack;
 
 class Player{
-	ArrayList<Item> items;
+
 	ArrayList<Poke> pokemon;
 	String[][] symbols;
 	String[][] symbols2;
 	Collection collection;
 	String[] symbolsInterior;
 	String[] symbolsInterior2;
-	
+	private static int gold = 200;
 	private static int numPokemon = 0;
 	
 	
 	Player(){
-		items = new ArrayList<>();
+
 		pokemon = new ArrayList<>();
-		Item bandage = new Item("Bandage", 3);
-		Item pokeball = new Item("PokeBall", 8);
-		Item revives = new Item("Revives", 1);
-		Item candy = new Item("Candy", 4);
-		Item repelent = new Item("Repelent", 1);
-		items.add(bandage);
-		items.add(pokeball);
-		items.add(revives);
-		items.add(repelent);
-		items.add(candy);
+		
 		symbols = new String[3][4];
 		symbols2 = new String[3][4];
 		symbolsInterior = new String[10];
