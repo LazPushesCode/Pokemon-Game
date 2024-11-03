@@ -17,24 +17,23 @@ class game {
 		Map bigMap = new Map("");
 		Map.InitializeHashMaps();
 		smallMap.setChunkValues("World1");
+		
 		Tutorial.tutorial(user, smallMap);
-		user.collection.printPokemon();
+		
 		ItemShopDatabase itemshop = new ItemShopDatabase();
-		Backpack backpack = new Backpack();
+		Collection globalPokeDex = new Collection();
+		
 		String currMap;
 		String currSize;
-		System.out.print(" has been added to the party!");
 		input = scan.next();
 		user.customize();
 		System.out.println(itemshop.getItemDescription("PokeBall"));
 		spaces();
 		//load chunks -> print map -> take input -> repeat
-		while(true) {
+		while(user.execute == 0) {
 			spaces();
-			
 			currMap = Map.mapGen;
 			currSize = Map.mapSize;
-			
 			
 			//checks for the size of the map, then loads chunks and prints it based off the size.
 			//small - 8  : 11; 
@@ -52,8 +51,7 @@ class game {
 
 			//handles the input provided by user, which is processed and influences the chunks and printing of the map (takeInput leads to backbone of game)
 			input = scan.next();
-			smallMap.takeInput(input, user, currMap, Map.mapSize);
-			if(input.equals("o"))break;
+			smallMap.takeInput(input, user, currMap, Map.mapSize, itemshop, smallMap);
 		}
 		scan.close();
 	}
@@ -91,7 +89,7 @@ class Tutorial{
 		}
 		int pos = 0;
 		positions[pos] = ">";
-		while(term == 0) {
+		while(term == 0 ) {
 			game.spaces();
 			System.out.println(positions[0] + " Fizard          " + positions[1] +" Aqualard          " + positions[2] + " Leaflet");
 			input = scan.next();
@@ -105,15 +103,23 @@ class Tutorial{
 				positions[pos] = ">";
 			} else if(input.equals("c")) {
 				if(pos == 0) {
-	//				user.pokemon.add(fizard);
-					user.addPoke("Fizard", "Fire", "NONE", 0, 0, 0, 0, 0);
+					//hp, attack, sp.attack, defense, sp.defense, speed;
+					Poke fizard = new Poke("Fizard", "Fire", "NONE",35, 1, 1, 1, 1 ,1, "starter");
+					user.addToPokeDex(fizard);
+					user.addPokemonToRoster(fizard);
+					System.out.println("Fizard has been added to your party!");
 				} else if(pos == 1) {
-					user.addPoke("Aqualard",  "Water", "NONE", 0, 0, 0, 0, 0);
-	//				user.pokemon.add(aqualard);
+					Poke aqualard = new Poke("Aqualard", "Water", "NONE", 1, 1, 1, 1, 1 ,1, "starter");
+					user.addToPokeDex(aqualard);
+					user.addPokemonToRoster(aqualard);
+					System.out.println("Aqualard has been added to your party!");
 				} else if(pos == 2) {
-					user.addPoke("Leaflet",  "Nature", "NONE", 0, 0, 0, 0, 0);
-	//				user.pokemon.add(Leaflet);
+					Poke leaflet = new Poke("Leaftlet", "Grass", "NONE", 1, 1, 1, 1, 1 ,1, "starter");
+					user.addToPokeDex(leaflet);
+					user.addPokemonToRoster(leaflet);
+					System.out.println("Leaflet has been added to your party!");
 				}
+				
 				if(user.collection != null) {
 					game.spaces();
 					break;

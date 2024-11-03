@@ -12,15 +12,14 @@ public class Collection {
 	private HashMap<String, Poke> pokemonCollection;
 	private HashMap<String, Attack> attackCollection;
 	
-	public Collection(String name, Poke pokemon) {
+	public Collection(String pokeDexFlag) {
 		pokemonCollection = new HashMap<>();
-		pokemonCollection.put(name, pokemon);
 	}
 	
 	public Collection() {
 		pokemonCollection = new HashMap<>();
-		Poke pokemon1 = new Poke("Poke1", "default", "default", 0, 0, 0, 0, 0);
-		Poke pokemon2 = new Poke("Poke2", "default", "default", 0, 0, 0, 0, 0);
+		Poke pokemon1 = new Poke("Poke1", "default", "default", 0, 0, 0, 0, 0, 0, "Starter");
+		Poke pokemon2 = new Poke("Poke2", "default", "default", 0, 0, 0, 0, 0, 0, "Starter");
 		pokemonCollection.put(pokemon1.name, pokemon1);
 		pokemonCollection.put(pokemon2.name, pokemon2);
 	}
