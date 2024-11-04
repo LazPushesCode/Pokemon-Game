@@ -520,9 +520,10 @@ class ItemShopDatabase{
 						}
 						if(input.equals("o")) {
 							input = "";
+							positions[pos] = ' ';
+							pos = 0;
 							break;
 						}
-						
 					}
 				} else if(pos == 2){
 					return;
