@@ -7,7 +7,6 @@ import java.util.Scanner;
 import pokemon.game;
 import pokemon.Item;
 import pokemon.Map.chunk;
-
 import pokemon.Backpack;
 
 class Player{
@@ -16,17 +15,18 @@ class Player{
 	Backpack backpack;
 	String[][] symbols;
 	String[][] symbols2;
-	Collection collection;
+	PokeDex pokedex;
 	String[] symbolsInterior;
 	String[] symbolsInterior2;
 	static int gold = 100000000;
-	private static int numRoster= 0;
+	static int numRoster= 0;
+	static int numPokedex = 0;
 	int execute = 0;
 	Player(){
 		rosterlist = new ArrayList<Poke>(6);
 		backpack = new Backpack();
 		roster = new HashMap<>();
-		collection = new Collection();
+		pokedex = new PokeDex();
 		symbols = new String[3][4];
 		symbols2 = new String[3][4];
 		symbolsInterior = new String[10];
@@ -41,9 +41,9 @@ class Player{
 		}
 	}
 	public void addToPokeDex(Poke pokemon) {
-		if(!(collection.hasPokemon(pokemon.name))) {
-			collection.addPokemon(pokemon.name, pokemon);
-		}
+		numPokedex++;
+		pokemon.ID = numPokedex;
+		pokedex.addPoke(pokemon);
 	}
 	
 	public void healAllPokemon() {
@@ -822,6 +822,5 @@ class Player{
 		}
 		
 	}
-	
-	
+
 }

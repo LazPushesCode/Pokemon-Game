@@ -1,10 +1,18 @@
 package pokemon;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Scanner;
 import pokemon.game;
+import pokemon.Item;
+import pokemon.Map.chunk;
 import java.util.Random;
+import pokemon.Backpack;
 
 public class Poke {
 	int level;
 	String name;
+	int ID;
 	
 	int hp;
 	int speed;
@@ -17,11 +25,11 @@ public class Poke {
 	
 	int EV[];
 	int IV[];
-	int base[];
 	Item itemHeld;
 	String type[] = {"",""};
-	
-	Poke(String name, String type1, String type2, int hp, int attack, int specialAttack, int defense, int specialDefense, int speed, String flag){
+	String debuff;
+	String status;
+	Poke(String name, Collection collection, String flag){
 		Random random = new Random();
 		if(flag.equals("starter")) {
 			level = 5;
@@ -34,25 +42,20 @@ public class Poke {
 		}
 		//0 - hp, 1 - attack, 2 - spAttack, 3 - defense, 4 - spDefense, 5 - speed
 		this.name = name;
-		this.type[0] = type1;
-		this.type[1] = type2;
-		base = new int[6];
+		this.type[0] = collection.get(name).type[0];
+		if(collection.get(name).type[1] != null) {
+			this.type[1] = collection.get(name).type[1];
+		}
 		EV = new int[6];
 		IV = new int[6];
-		base[0] = hp;
-		base[1] = attack;
-		base[2] = specialAttack;
-		base[3] = defense;
-		base[4] = specialDefense;
-		base[5] = speed;
 		initializeStats();
 		//calculate stats
-		this.hp = (((2 * base[0] + IV[0] + (EV[0]/4))/100)*level) + level + 10;
-		this.attack = (((2 * base[1] + IV[1] + (EV[1]/4))/100)*level) + 5;
-		this.spAttack = (((2 * base[2] + IV[2] + (EV[2]/4))/100)*level) + 5;
-		this.defense = (((2 * base[3] + IV[3] + (EV[3]/4))/100)*level) + 5;
-		this.spDefense = (((2 * base[4] + IV[4] + (EV[4]/4))/100)*level) + 5;
-		this.speed = (((2 * base[5] + IV[5] + (EV[5]/4))/100)*level) + 5;
+		this.hp = (((2 * collection.get(name).bhp + IV[0] + (EV[0]/4))/100)*level) + level + 10;
+		this.attack = (((2 * collection.get(name).battack + IV[1] + (EV[1]/4))/100)*level) + 5;
+		this.spAttack = (((2 * collection.get(name).bspattack + IV[2] + (EV[2]/4))/100)*level) + 5;
+		this.defense = (((2 * collection.get(name).bdefense + IV[3] + (EV[3]/4))/100)*level) + 5;
+		this.spDefense = (((2 * collection.get(name).bspdefense + IV[4] + (EV[4]/4))/100)*level) + 5;
+		this.speed = (((2 * collection.get(name).bspeed + IV[5] + (EV[5]/4))/100)*level) + 5;
 		temphp = this.hp;
 	}
 	public void initializeStats() {
@@ -63,13 +66,13 @@ public class Poke {
 		}
 	}
 	
-	public void updateStats() {
-		this.hp = (((2 * base[0] + IV[0] + (EV[0]/4))/100)*level) + level + 10;
-		this.attack = (((2 * base[1] + IV[1] + (EV[1]/4))/100)*level) + 5;
-		this.spAttack = (((2 * base[2] + IV[2] + (EV[2]/4))/100)*level) + 5;
-		this.defense = (((2 * base[3] + IV[3] + (EV[3]/4))/100)*level) + 5;
-		this.spDefense = (((2 * base[4] + IV[4] + (EV[4]/4))/100)*level) + 5;
-		this.speed = (((2 * base[5] + IV[5] + (EV[5]/4))/100)*level) + 5;
+	public void updateStats(Collection collection) {
+		this.hp = (((2 * collection.get(name).bhp + IV[0] + (EV[0]/4))/100)*level) + level + 10;
+		this.attack = (((2 * collection.get(name).battack + IV[1] + (EV[1]/4))/100)*level) + 5;
+		this.spAttack = (((2 * collection.get(name).bspattack + IV[2] + (EV[2]/4))/100)*level) + 5;
+		this.defense = (((2 * collection.get(name).bdefense + IV[3] + (EV[3]/4))/100)*level) + 5;
+		this.spDefense = (((2 * collection.get(name).bspdefense + IV[4] + (EV[4]/4))/100)*level) + 5;
+		this.speed = (((2 * collection.get(name).bspeed + IV[5] + (EV[5]/4))/100)*level) + 5;
 	}
 }	
 
@@ -77,38 +80,75 @@ class Attack{
 	String name;
 	String type;
 	double accuracy;
+	String effect;
 	Attack() {
 		this.name = "NONE";
 		this.type = "NONE";
 		this.accuracy = 0;
+		this.effect = "NONE";
 	}
-	Attack(String name, String type, double accuracy){
+	Attack(String name, String type, double accuracy, String effect){
 		this.name = name;
 		this.type = type;
 		this.accuracy = accuracy;
+		this.effect = effect;
 	}
 }
 
-class Normal extends Attack{
+class Physical extends Attack{
 	int power;
-	Normal(String name, String type, double accuracy, int power){
-		super(name, type, accuracy);
+	Physical(String name, String type, double accuracy, String effect, int power){
+		super(name, type, accuracy, effect);
 		this.power = power;
 	}
 }
 
 class Special extends Attack{
-	String debuff;
 	int dps;
 	int power;
-	Special(String name, String type, double accuracy, int power, int dps, String debuff){
-		super(name, type, accuracy);
+	Special(String name, String type, double accuracy, String effect, int power, int dps){
+		super(name, type, accuracy, effect);
 		this.power = power;
 		this.dps = dps;
-		this.debuff = debuff;
 	}
 }
 
 class Status extends Attack{
+	Status(String name, String type, int accuracy, String effect){
+		super(name, type, accuracy, effect);
+		this.effect = effect;
+	}
 	//specific effect i guess
 }
+
+class AttackDatabase{
+	
+	private HashMap<String, Physical> physicalMoves;
+	private HashMap<String, Special> specialMoves;
+	private HashMap<String, Status> statusMoves;
+	
+	AttackDatabase(){
+		physicalMoves = new HashMap<>();
+		specialMoves = new HashMap<>();
+		statusMoves = new HashMap<>();
+		
+		
+	}
+	
+	public Attack findMoveInformation(Attack move) {
+		String key = move.getClass().toString();
+		if(key.equals("Physical")) {
+			return physicalMoves.get(move.name);
+		} else if(key.equals("Special")) {
+			return specialMoves.get(move.name);
+		} else if(key.equals("Status")) {
+			return statusMoves.get(move.name);
+		} else {
+			return null;
+		}
+	}
+}
+
+
+
+
