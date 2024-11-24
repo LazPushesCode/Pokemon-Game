@@ -25,8 +25,8 @@ class game {
 		map.setChunkValues("World1");
 		
 		ItemShopDatabase itemshop = new ItemShopDatabase();
-		Collection collection = new Collection();
 		AttackDatabase attackLib = new AttackDatabase();
+		Collection collection = new Collection(attackLib);
 		
 		Tutorial.tutorial(user, map, collection);
 		
@@ -43,8 +43,10 @@ class game {
 		
 		Battle simulation = new Battle();
 		
-		
-		
+		Poke test = new Poke("test", collection, "random20-30");
+		user.addPokemonToRoster(test);
+		user.addToPokeDex(test);
+
 		GrassPuzzle grasspuzzle = new GrassPuzzle();
 		spaces();
 		//load chunks -> print map -> take input -> repeat

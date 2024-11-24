@@ -3,6 +3,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.Random;
 import pokemon.Map;
 import pokemon.Map.chunk;
@@ -629,69 +630,104 @@ public class Battle {
 		}
 	}
 	
-	public  void inflictDebuff(Poke curr) {
-		try {
-			Method method = Battle.class.getMethod(curr.debuff);
-		} catch(Exception e) {
-			System.out.println("No method such as this...");
+	public  void inflict(Poke curr, Poke attacker) {
+		if(!(curr.debuff.equals(""))) {
+			String key = "";
+			for(int i = 0; i < curr.debuff.length(); i++) {
+				if(curr.debuff.substring(i, i+1).equals(" ")) {
+					key += "_";
+				} else {
+					key += curr.debuff.substring(i, i+1);
+				}
+			}
+		    try {
+		    		key.trim();
+		            Method method = Battle.class.getMethod(key, Poke.class);
+		            method.invoke(this, curr);
+			} catch(NoSuchMethodException e) {
+				//if method doesn't exist or if method parameters do not meet requirements
+				if(key.equals("Photosynthesis")) {
+					Photosynthesis(curr, attacker);
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}	
 	
+	public void inflictStatus(Poke curr) {
+		if(!(curr.status.equals(""))) {
+			String key = "";
+			for(int i = 0; i < curr.status.length(); i++) {
+				if(curr.status.substring(i, i+1).equals(" ")) {
+					key += "_";
+				} else {
+					key += curr.status.substring(i, i+1);
+				}
+			}
+		    try {
+		    		key.trim();
+		            Method method = Battle.class.getMethod(key, Poke.class);
+		            method.invoke(this, curr);
+			} catch(NoSuchMethodException e) {
+				//type methods that have multiple parameters
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void Burn(Poke curr) {
-		//inflict damage
+		//inflicts 10% dps
 	}
 	public void Poison(Poke curr) {
-		//inflict damage
-		
+		//inflicts 15% dps
 	}
 	public void Drown(Poke curr) {
-		//inflict damage
-	
+		//inflict 5% dps
 	}
 	public void Heal(Poke curr) {
-		
-	
+		//heals the pokemon by 50% of its hp
 	}
-	public void EnhanceAttack() {
-		
-	
+	public void Evade(Poke curr) {
+		//provides current pokemon the ability to dodge every turn until its gone
 	}
-	public void Evade() {
-	
+	public void Mud(Poke curr) {
+		//causes current pokemon to lose control of what move they use, reduces POW of move by 45%, and removes the debuff if special
 	}
-	public void Mud() {
-		
-		
+	public void Rock_Shield(Poke curr) {
+		//provides current pokemon a 50% shield
 	}
-	public void RockShield() {
-		
-		
+	public void Ice_Shield(Poke curr) {
+		//provides current pokemon a 20% shield
 	}
-	public void IceShield() {
-	
-		
+	public void Shock(Poke curr) {
+		//slows the current pokemon down and 25% chance to miss a move
 	}
-	public void Shock() {
-		
-		
+	public void Haste(Poke curr) {
+		//should increase move accuracy, reduce damage taken, increase chance to dodge attack by a significant amount
 	}
-	public void EnhanceSpeed() {
-		
-		
+	public void Reflect(Poke curr) {
+		//reflects 40% of damage taken back onto enemy and reduces damage taken by 20%
 	}
-	public void Reflect() {
-		
-		
+	public void Extra_Turn(Poke curr) {
+		//provides pokemon an extra turn after performing their turn in battle
 	}
-	public void ReduceAttack() {
-	
-		
+	public void Photosynthesis(Poke curr, Poke Attacker) {
+		//provides the attacker some random benefit and provides some stat negatives to inflicted pokemon
 	}
-	public void ReduceSpAttack() {
-		
-		
+	public void Thorns(Poke curr) {
+		//thorn status effect grants current pokemon chance to damage enemy pokemon whenever it attacks it and a low chance to inflict poison
 	}
-
+	public void Paralyze(Poke curr) {
+		//prevents current pokemon from using its turn in battle temporarily
+	}
+	public void Confuse(Poke curr) {
+		//causes current pokemon to have a chance at attacking itself or teamates
+	}
+	public void Daze(Poke curr) {
+		//lowers the accuracy of current pokemon by 65%
+	}
 }
 
 
