@@ -781,27 +781,60 @@ class Player{
 						chunks.get(2).get(2).grid[1] ="|                 ";chunks.get(2).get(3).grid[1] ="                  ";chunks.get(2).get(4).grid[1] ="                  ";chunks.get(2).get(5).grid[1] ="                  ";chunks.get(2).get(6).grid[1] ="                  ";chunks.get(2).get(7).grid[1] ="                  ";chunks.get(2).get(8).grid[1] ="                 |";
 						chunks.get(2).get(2).grid[2] ="|                 ";chunks.get(2).get(3).grid[2] ="                  ";chunks.get(2).get(4).grid[2] ="                  ";chunks.get(2).get(5).grid[2] ="                  ";chunks.get(2).get(6).grid[2] ="                  ";chunks.get(2).get(7).grid[2] ="                  ";chunks.get(2).get(8).grid[2] ="                 |";
 						chunks.get(2).get(2).grid[3] ="|                 ";chunks.get(2).get(3).grid[3] ="                  ";chunks.get(2).get(4).grid[3] ="                  ";chunks.get(2).get(5).grid[3] ="                  ";chunks.get(2).get(6).grid[3] ="                  ";chunks.get(2).get(7).grid[3] ="                  ";chunks.get(2).get(8).grid[3] ="                 |";
-						chunks.get(2).get(2).grid[4] ="|                 ";chunks.get(2).get(3).grid[4] ="                  ";chunks.get(2).get(4).grid[4] ="                  ";chunks.get(2).get(5).grid[4] ="                  ";chunks.get(2).get(6).grid[4] ="                  ";chunks.get(2).get(7).grid[4] ="                  ";chunks.get(2).get(8).grid[4] ="                 |";
-						chunks.get(3).get(2).grid[0] ="|                 ";chunks.get(3).get(3).grid[0] ="                  ";chunks.get(3).get(4).grid[0] ="                  ";chunks.get(3).get(5).grid[0] ="                  ";chunks.get(3).get(6).grid[0] ="                  ";chunks.get(3).get(7).grid[0] ="                  ";chunks.get(3).get(8).grid[0] ="                 |";
-						chunks.get(3).get(2).grid[1] ="|                 ";chunks.get(3).get(3).grid[1] ="                  ";chunks.get(3).get(4).grid[1] ="                  ";chunks.get(3).get(5).grid[1] ="                  ";chunks.get(3).get(6).grid[1] ="                  ";chunks.get(3).get(7).grid[1] ="                  ";chunks.get(3).get(8).grid[1] ="                 |";
-						chunks.get(3).get(2).grid[2] ="|                 ";chunks.get(3).get(3).grid[2] ="                  ";chunks.get(3).get(4).grid[2] ="                  ";chunks.get(3).get(5).grid[2] ="                  ";chunks.get(3).get(6).grid[2] ="                  ";chunks.get(3).get(7).grid[2] ="                  ";chunks.get(3).get(8).grid[2] ="                 |";
-						chunks.get(3).get(2).grid[3] ="|                 ";chunks.get(3).get(3).grid[3] ="                  ";chunks.get(3).get(4).grid[3] ="                  ";chunks.get(3).get(5).grid[3] ="                  ";chunks.get(3).get(6).grid[3] ="                  ";chunks.get(3).get(7).grid[3] ="                  ";chunks.get(3).get(8).grid[3] ="                 |";
-						chunks.get(3).get(2).grid[4] ="|                 ";chunks.get(3).get(3).grid[4] ="                  ";chunks.get(3).get(4).grid[4] ="                  ";chunks.get(3).get(5).grid[4] ="                  ";chunks.get(3).get(6).grid[4] ="                  ";chunks.get(3).get(7).grid[4] ="                  ";chunks.get(3).get(8).grid[4] ="                 |";
-						chunks.get(4).get(2).grid[0] ="|                 ";chunks.get(4).get(3).grid[0] ="                  ";chunks.get(4).get(4).grid[0] ="                  ";chunks.get(4).get(5).grid[0] ="                  ";chunks.get(4).get(6).grid[0] ="                  ";chunks.get(4).get(7).grid[0] ="                  ";chunks.get(4).get(8).grid[0] ="                 |";
+						chunks.get(2).get(2).grid[4] ="|                *";chunks.get(2).get(3).grid[4] ="------------------";chunks.get(2).get(4).grid[4] ="------------------";chunks.get(2).get(5).grid[4] ="*                *";chunks.get(2).get(6).grid[4] ="------------------";chunks.get(2).get(7).grid[4] ="------------------";chunks.get(2).get(8).grid[4] ="*                |";
+						chunks.get(3).get(2).grid[0] ="|                |";chunks.get(3).get(3).grid[0] ="                  ";chunks.get(3).get(4).grid[0] ="                  ";chunks.get(3).get(5).grid[0] ="|                |";chunks.get(3).get(6).grid[0] ="                  ";chunks.get(3).get(7).grid[0] ="                  ";chunks.get(3).get(8).grid[0] ="|                |";
+						chunks.get(3).get(2).grid[1] ="|                |";chunks.get(3).get(3).grid[1] ="                  ";chunks.get(3).get(4).grid[1] ="                  ";chunks.get(3).get(5).grid[1] ="|                |";chunks.get(3).get(6).grid[1] ="                  ";chunks.get(3).get(7).grid[1] ="                  ";chunks.get(3).get(8).grid[1] ="|                |";
+						chunks.get(3).get(2).grid[2] ="|                |";chunks.get(3).get(3).grid[2] ="                  ";chunks.get(3).get(4).grid[2] ="                  ";chunks.get(3).get(5).grid[2] ="|                |";chunks.get(3).get(6).grid[2] ="                  ";chunks.get(3).get(7).grid[2] ="                  ";chunks.get(3).get(8).grid[2] ="|                |";
+						chunks.get(3).get(2).grid[3] ="|                |";chunks.get(3).get(3).grid[3] ="                  ";chunks.get(3).get(4).grid[3] ="                  ";chunks.get(3).get(5).grid[3] ="|                |";chunks.get(3).get(6).grid[3] ="                  ";chunks.get(3).get(7).grid[3] ="                  ";chunks.get(3).get(8).grid[3] ="|                |";
+						chunks.get(3).get(2).grid[4] ="|                |";chunks.get(3).get(3).grid[4] ="                  ";chunks.get(3).get(4).grid[4] ="                  ";chunks.get(3).get(5).grid[4] ="|                |";chunks.get(3).get(6).grid[4] ="                  ";chunks.get(3).get(7).grid[4] ="                  ";chunks.get(3).get(8).grid[4] ="|                |";
+						chunks.get(4).get(2).grid[0] ="|                *";chunks.get(4).get(3).grid[0] ="------------------";chunks.get(4).get(4).grid[0] ="------------------";chunks.get(4).get(5).grid[0] ="*                *";chunks.get(4).get(6).grid[0] ="------------------";chunks.get(4).get(7).grid[0] ="------------------";chunks.get(4).get(8).grid[0] ="*                |";
 						chunks.get(4).get(2).grid[1] ="|                 ";chunks.get(4).get(3).grid[1] ="                  ";chunks.get(4).get(4).grid[1] ="                  ";chunks.get(4).get(5).grid[1] ="                  ";chunks.get(4).get(6).grid[1] ="                  ";chunks.get(4).get(7).grid[1] ="                  ";chunks.get(4).get(8).grid[1] ="                 |";
 						chunks.get(4).get(2).grid[2] ="|                 ";chunks.get(4).get(3).grid[2] ="                  ";chunks.get(4).get(4).grid[2] ="                  ";chunks.get(4).get(5).grid[2] ="                  ";chunks.get(4).get(6).grid[2] ="                  ";chunks.get(4).get(7).grid[2] ="                  ";chunks.get(4).get(8).grid[2] ="                 |";
 						chunks.get(4).get(2).grid[3] ="|                 ";chunks.get(4).get(3).grid[3] ="                  ";chunks.get(4).get(4).grid[3] ="                  ";chunks.get(4).get(5).grid[3] ="                  ";chunks.get(4).get(6).grid[3] ="                  ";chunks.get(4).get(7).grid[3] ="                  ";chunks.get(4).get(8).grid[3] ="                 |";
-						chunks.get(4).get(2).grid[4] ="|                 ";chunks.get(4).get(3).grid[4] ="                  ";chunks.get(4).get(4).grid[4] ="                  ";chunks.get(4).get(5).grid[4] ="                  ";chunks.get(4).get(6).grid[4] ="                  ";chunks.get(4).get(7).grid[4] ="                  ";chunks.get(4).get(8).grid[4] ="                 |";
-						chunks.get(5).get(2).grid[0] ="|                 ";chunks.get(5).get(3).grid[0] ="                  ";chunks.get(5).get(4).grid[0] ="                  ";chunks.get(5).get(5).grid[0] ="                  ";chunks.get(5).get(6).grid[0] ="                  ";chunks.get(5).get(7).grid[0] ="                  ";chunks.get(5).get(8).grid[0] ="                 |";
-						chunks.get(5).get(2).grid[1] ="|                 ";chunks.get(5).get(3).grid[1] ="                  ";chunks.get(5).get(4).grid[1] ="                  ";chunks.get(5).get(5).grid[1] ="                  ";chunks.get(5).get(6).grid[1] ="                  ";chunks.get(5).get(7).grid[1] ="                  ";chunks.get(5).get(8).grid[1] ="                 |";
-						chunks.get(5).get(2).grid[2] ="|                 ";chunks.get(5).get(3).grid[2] ="                  ";chunks.get(5).get(4).grid[2] ="                  ";chunks.get(5).get(5).grid[2] ="                  ";chunks.get(5).get(6).grid[2] ="                  ";chunks.get(5).get(7).grid[2] ="                  ";chunks.get(5).get(8).grid[2] ="                 |";
-						chunks.get(5).get(2).grid[3] ="|                 ";chunks.get(5).get(3).grid[3] ="                  ";chunks.get(5).get(4).grid[3] ="                  ";chunks.get(5).get(5).grid[3] ="                  ";chunks.get(5).get(6).grid[3] ="                  ";chunks.get(5).get(7).grid[3] ="                  ";chunks.get(5).get(8).grid[3] ="                 |";
-						chunks.get(5).get(2).grid[4] ="|                 ";chunks.get(5).get(3).grid[4] ="                  ";chunks.get(5).get(4).grid[4] ="                  ";chunks.get(5).get(5).grid[4] ="                  ";chunks.get(5).get(6).grid[4] ="                  ";chunks.get(5).get(7).grid[4] ="                  ";chunks.get(5).get(8).grid[4] ="                 |";
-						chunks.get(6).get(2).grid[0] ="|                 ";chunks.get(6).get(3).grid[0] ="                  ";chunks.get(6).get(4).grid[0] ="                  ";chunks.get(6).get(5).grid[0] ="                  ";chunks.get(6).get(6).grid[0] ="                  ";chunks.get(6).get(7).grid[0] ="                  ";chunks.get(6).get(8).grid[0] ="                 |";
+						chunks.get(4).get(2).grid[4] ="|                *";chunks.get(4).get(3).grid[4] ="------------------";chunks.get(4).get(4).grid[4] ="------------------";chunks.get(4).get(5).grid[4] ="*                *";chunks.get(4).get(6).grid[4] ="------------------";chunks.get(4).get(7).grid[4] ="------------------";chunks.get(4).get(8).grid[4] ="*                |";
+						chunks.get(5).get(2).grid[0] ="|                |";chunks.get(5).get(3).grid[0] ="                  ";chunks.get(5).get(4).grid[0] ="                  ";chunks.get(5).get(5).grid[0] ="|                |";chunks.get(5).get(6).grid[0] ="                  ";chunks.get(5).get(7).grid[0] ="                  ";chunks.get(5).get(8).grid[0] ="|                |";
+						chunks.get(5).get(2).grid[1] ="|                |";chunks.get(5).get(3).grid[1] ="                  ";chunks.get(5).get(4).grid[1] ="                  ";chunks.get(5).get(5).grid[1] ="|                |";chunks.get(5).get(6).grid[1] ="                  ";chunks.get(5).get(7).grid[1] ="                  ";chunks.get(5).get(8).grid[1] ="|                |";
+						chunks.get(5).get(2).grid[2] ="|                |";chunks.get(5).get(3).grid[2] ="                  ";chunks.get(5).get(4).grid[2] ="                  ";chunks.get(5).get(5).grid[2] ="|                |";chunks.get(5).get(6).grid[2] ="                  ";chunks.get(5).get(7).grid[2] ="                  ";chunks.get(5).get(8).grid[2] ="|                |";
+						chunks.get(5).get(2).grid[3] ="|                |";chunks.get(5).get(3).grid[3] ="                  ";chunks.get(5).get(4).grid[3] ="                  ";chunks.get(5).get(5).grid[3] ="|                |";chunks.get(5).get(6).grid[3] ="                  ";chunks.get(5).get(7).grid[3] ="                  ";chunks.get(5).get(8).grid[3] ="|                |";
+						chunks.get(5).get(2).grid[4] ="|                |";chunks.get(5).get(3).grid[4] ="                  ";chunks.get(5).get(4).grid[4] ="                  ";chunks.get(5).get(5).grid[4] ="|                |";chunks.get(5).get(6).grid[4] ="                  ";chunks.get(5).get(7).grid[4] ="                  ";chunks.get(5).get(8).grid[4] ="|                |";
+						chunks.get(6).get(2).grid[0] ="|                *";chunks.get(6).get(3).grid[0] ="------------------";chunks.get(6).get(4).grid[0] ="------------------";chunks.get(6).get(5).grid[0] ="*                *";chunks.get(6).get(6).grid[0] ="------------------";chunks.get(6).get(7).grid[0] ="------------------";chunks.get(6).get(8).grid[0] ="*                |";
 						chunks.get(6).get(2).grid[1] ="|                 ";chunks.get(6).get(3).grid[1] ="                  ";chunks.get(6).get(4).grid[1] ="                  ";chunks.get(6).get(5).grid[1] ="                  ";chunks.get(6).get(6).grid[1] ="                  ";chunks.get(6).get(7).grid[1] ="                  ";chunks.get(6).get(8).grid[1] ="                 |";
-						chunks.get(6).get(2).grid[2] ="|                 ";chunks.get(6).get(3).grid[2] ="                  ";chunks.get(6).get(4).grid[2] ="                  ";chunks.get(6).get(5).grid[2] ="                  ";chunks.get(6).get(6).grid[2] ="                  ";chunks.get(6).get(7).grid[2] ="                  ";chunks.get(6).get(8).grid[2] ="                 |";
+						chunks.get(6).get(2).grid[2] ="|                 ";chunks.get(6).get(3).grid[2] =" >  B A C K       ";chunks.get(6).get(4).grid[2] ="                  ";chunks.get(6).get(5).grid[2] ="                  ";chunks.get(6).get(6).grid[2] ="                  ";chunks.get(6).get(7).grid[2] ="                  ";chunks.get(6).get(8).grid[2] ="                 |";
 						chunks.get(6).get(2).grid[3] ="|                 ";chunks.get(6).get(3).grid[3] ="                  ";chunks.get(6).get(4).grid[3] ="                  ";chunks.get(6).get(5).grid[3] ="                  ";chunks.get(6).get(6).grid[3] ="                  ";chunks.get(6).get(7).grid[3] ="                  ";chunks.get(6).get(8).grid[3] ="                 |";
 						chunks.get(6).get(2).grid[4] ="|_________________";chunks.get(6).get(3).grid[4] ="__________________";chunks.get(6).get(4).grid[4] ="__________________";chunks.get(6).get(5).grid[4] ="__________________";chunks.get(6).get(6).grid[4] ="__________________";chunks.get(6).get(7).grid[4] ="__________________";chunks.get(6).get(8).grid[4] ="_________________|";	
+						int row = 3; int col = 3;
+						for(int i = 0; i < 4; i++) {
+							try {
+								chunks.get(row).get(col).grid[0] = "  " + rosterlist.get(pindex).movesets.get(i).name;
+								chunks.get(row).get(col+1).grid[0] = rosterlist.get(pindex).movesets.get(i).type;
+								chunks.get(row).get(col).grid[1] = "------------------";chunks.get(row).get(col+1).grid[1] = "------------------";
+								String pow = "    POW: " + String.valueOf(rosterlist.get(pindex).movesets.get(i).power);
+								String acc = "    ACC: " + String.valueOf(rosterlist.get(pindex).movesets.get(i).accuracy);
+								chunks.get(row).get(col+1).grid[2] = acc;
+								System.out.println(pow.length());
+								System.out.println(acc.length());
+								chunks.get(row).get(col).grid[2] = pow; 
+								chunks.get(row).get(col).grid[4] = "  " + rosterlist.get(pindex).movesets.get(i).attackType;
+								if(!(rosterlist.get(pindex).movesets.get(i).effect.equals(""))) {
+									chunks.get(row).get(col+1).grid[4] = rosterlist.get(pindex).movesets.get(i).effect;
+								}
+								for(int j = 0; j < 18; j++) {
+									if(j >= chunks.get(row).get(col).grid[0].length()) chunks.get(row).get(col).grid[0] += " ";
+									if(j >= chunks.get(row).get(col+1).grid[0].length()) chunks.get(row).get(col+1).grid[0] += " ";
+									if(j >= chunks.get(row).get(col).grid[2].length()) chunks.get(row).get(col).grid[2] += " ";
+									if(j >= chunks.get(row).get(col+1).grid[2].length()) chunks.get(row).get(col+1).grid[2] += " ";
+									if(j >= chunks.get(row).get(col).grid[4].length()) chunks.get(row).get(col).grid[4] += " ";
+									if(j >= chunks.get(row).get(col+1).grid[4].length() && rosterlist.get(pindex).movesets.get(i).effect.length() > 0) chunks.get(row).get(col+1).grid[4] += " ";
+								}
+							} catch(Exception e) {
+								break;
+							}
+							col += 3;
+							if(col > 6) {
+								col = 3; 
+								row = 5;
+							}
+						}
 						
 						game.spaces();
 						for(int i = 0; i < 8; i++) {
@@ -814,7 +847,7 @@ class Player{
 							}
 						}
 						input = scan.next();
-						if(input.equals("o")) break;
+						if(input.equals("o") || input.equals("c")) break;
 					}
 				}
 			}

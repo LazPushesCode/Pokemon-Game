@@ -42,11 +42,10 @@ class game {
 		user.backpack.addItem("Hyper Potion", itemshop.returnItem("Hyper Potion"));
 		
 		Battle simulation = new Battle();
+		Poke test = new Poke("Stickly", collection, "random20-30");
+		map.mapDialogue("Hello World!                  ");
+		simulation.OverviewBattleWild(user, test, map.chunks, map);
 		
-		Poke test = new Poke("test", collection, "random20-30");
-		user.addPokemonToRoster(test);
-		user.addToPokeDex(test);
-
 		GrassPuzzle grasspuzzle = new GrassPuzzle();
 		spaces();
 		//load chunks -> print map -> take input -> repeat
@@ -119,7 +118,7 @@ class Tutorial{
 			} else if(input.equals("c")) {
 				if(pos == 0) {
 					//hp, attack, sp.attack, defense, sp.defense, speed;
-					Poke fizard = new Poke("Fizard", collection, "starter");
+					Poke fizard = new Poke("Fizard", collection, "random20-30");
 					user.addToPokeDex(fizard);
 					user.addPokemonToRoster(fizard);
 					System.out.println("Fizard has been added to your party!");

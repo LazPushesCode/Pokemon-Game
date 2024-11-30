@@ -21,9 +21,11 @@ public class Collection {
 		//         name       types     hp  a   sa  d   sd   spe
 		//addPokemon("Fizard", "Fire", "",45, 50, 80, 40, 80 , 60);
 		addPokemon("Fizard", "Fire", "",120, 45, 55, 65, 30, 45);
+		pokemonCollection.get("Fizard").setMoves(attacks, "Flame Kick", "Searing Punch", "Flame Ignition", "Meteor Shower", "Swelling Inferno", "ASHES OF POMPEII", "Magma Bound", null);
 		//world 1
 		
 		addPokemon("test", "", "", 1, 1, 1, 1, 1,1 );
+		
 		
 		addPokemon("Stickly", "Grass", "", 35, 55, 35, 45, 30, 70);
 		pokemonCollection.get("Stickly").setMoves(attacks, "Leaf Kick", "Stick Puncture", "Dirty Hook", "Dirty Slap", "Branch Throw", "Leaf Blow", null, null);

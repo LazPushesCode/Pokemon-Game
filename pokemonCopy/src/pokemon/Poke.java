@@ -22,15 +22,20 @@ public class Poke {
 	int spDefense;
 	int EVcount;
 	int temphp;
+	int tempstats[];
+	ArrayList<Attack> movesets;
 	
 	int EV[];
 	int IV[];
 	Item itemHeld;
 	String type[] = {"",""};
+	String impact;
 	String debuff;
 	String status;
+	int impacttimer, debufftimer, statustimer;
 	Poke(String name, Collection collection, String flag){
 		Random random = new Random();
+		movesets = new ArrayList<>();
 		if(flag.equals("starter")) {
 			level = 5;
 		} else if(flag.equals("random5-15")) {
@@ -40,6 +45,13 @@ public class Poke {
 		} else {
 			level = 1;
 		}
+		
+		movesets.add(collection.get(name).moves.get(0));
+		movesets.add(collection.get(name).moves.get(1));
+		if(level >= 7) movesets.add(collection.get(name).moves.get(2));
+		if(level >= 10) movesets.add(collection.get(name).moves.get(3));
+		debuff = ""; status = ""; impact = "";
+		
 		//0 - hp, 1 - attack, 2 - spAttack, 3 - defense, 4 - spDefense, 5 - speed
 		this.name = name;
 		this.type[0] = collection.get(name).type[0];
@@ -90,6 +102,10 @@ public class Poke {
 		this.speed = (int)temp;
 		System.out.println("RESULT speed: " +this.speed);
 		temphp = this.hp;
+		tempstats = new int[5];
+		this.tempstats[0] = this.speed;this.tempstats[1] = this.attack; this.tempstats[2] = this.spAttack;
+		this.tempstats[3] = this.defense;this.tempstats[4] = this.spDefense;
+		
 	}
 	public void initializeStats() {
 		Random ran = new Random();
@@ -112,26 +128,33 @@ public class Poke {
 class Attack{
 	String name;
 	String type;
-	double accuracy;
+	int accuracy;
 	String effect;
+	int power;
+	String attackType;
+	int pp;
 	Attack() {
 		this.name = "NONE";
 		this.type = "NONE";
 		this.accuracy = 0;
 		this.effect = "NONE";
 	}
-	Attack(String name, String type, double accuracy, String effect){
+	Attack(String name, String type, String attackType, int accuracy, String effect, int power, int pp){
 		this.name = name;
 		this.type = type;
 		this.accuracy = accuracy;
 		this.effect = effect;
+		this.power = power;
+		this.attackType = attackType;
+		this.pp = pp;
 	}
 }
 
 class Physical extends Attack{
 	int power;
-	Physical(String name, String type, double accuracy, String effect, int power){
-		super(name, type, accuracy, effect);
+	String attackType = "Physical";
+	Physical(String name, String type, int accuracy, String effect, int power, int pp){
+		super(name, type, "Physical", accuracy, effect, power, pp);
 		this.power = power;
 	}
 }
@@ -139,16 +162,18 @@ class Physical extends Attack{
 class Special extends Attack{
 	int dps;
 	int power;
-	Special(String name, String type, double accuracy, String effect, int power, int dps){
-		super(name, type, accuracy, effect);
+	String attackType = "Special";
+	Special(String name, String type, int accuracy, String effect, int power, int dps, int pp){
+		super(name, type, "Special", accuracy, effect, power, pp);
 		this.power = power;
 		this.dps = dps;
 	}
 }
 
 class Status extends Attack{
-	Status(String name, String type, double accuracy, String effect){
-		super(name, type, accuracy, effect);
+	String attackType = "Status";
+	Status(String name, String type, int accuracy, String effect, int power, int pp){
+		super(name, type, "Status", accuracy, effect, power, pp);
 		this.effect = effect;
 	}
 	//specific effect i guess
@@ -164,48 +189,76 @@ class AttackDatabase{
 		physicalMoves = new HashMap<>();
 		specialMoves = new HashMap<>();
 		statusMoves = new HashMap<>();
-		//attacktype, name, type, acc, effect, POW, dps
+		//attacktype, name, type, acc, effect, POW, dps, pp
 		
 		//physical grass moves
-		addMove("Physical", "Leaf Kick", "Grass", 100, "", 30, 0);
-		addMove("Physical", "Stick Puncture", "Grass", 100, "", 40, 0);
-		addMove("Physical", "Dirty Hook", "Grass", 100, "Daze", 50, 0);
-		addMove("Physical", "Dirty Slap", "Grass", 100, "", 50, 0);
-		addMove("Physical", "Lawn Mower", "Grass", 100, "", 80, 0);
-		addMove("Physical", "Weed Wacker", "Grass", 100, "", 75, 0);
-		addMove("Physical", "Tangled Vines", "Grass", 100, "Paralyze", 0, 0);
-		addMove("Physical", "Flora Wallop", "Grass", 100, "Daze", 70, 0);
-		addMove("Physical", "Forest Junction", "Grass", 100, "Paralyze", 120, 0);
-		addMove("Physical", "Hack-a-Tree", "Grass", 100, "", 150, 0);
+		addMove("Physical", "Leaf Kick", "Grass", 100, "", 30, 0, 30);
+		addMove("Physical", "Stick Puncture", "Grass", 100, "", 40, 0, 30);
+		addMove("Physical", "Dirty Hook", "Grass", 100, "Daze", 50, 0, 30);
+		addMove("Physical", "Dirty Slap", "Grass", 100, "", 50, 0, 30);
+		addMove("Physical", "Lawn Mower", "Grass", 100, "", 80, 0, 20);
+		addMove("Physical", "Weed Wacker", "Grass", 100, "", 75, 0, 20);
+		addMove("Physical", "Tangled Vines", "Grass", 100, "Paralyze", 0, 0, 20);
+		addMove("Physical", "Flora Wallop", "Grass", 100, "Daze", 70, 0, 20);
+		addMove("Physical", "Forest Junction", "Grass", 100, "Paralyze", 120, 0 ,10);
+		addMove("Physical", "Hack-a-Tree", "Grass", 100, "", 150, 0, 10);
 		//special grass moves
-		addMove("Special", "Shallow Grass Cut", "Grass", 100, "Bleed", 40, 0);
-		addMove("Special", "Branch Throw", "Grass", 100, "", 50, 0);
-		addMove("Special", "Dirty Shot", "Grass", 100, "Photosynthesis", 60, 0);
-		addMove("Special", "Leaf Blow", "Grass", 100, "", 50, 0);
-		addMove("Special", "Vine Lash", "Grass", 100, "Bleed", 80, 0);
-		addMove("Special", "Herb Clash", "Grass", 100, "", 75, 0);
-		addMove("Special", "HayMaker", "Grass", 100, "", 90, 0);
-		addMove("Special", "Weeping Willow", "Grass", 100, "", 70, 0);
-		addMove("Special", "Jungle Junction", "Grass", 100, "Photosynthesis", 120, 0);
-		addMove("Special", "Uprooted", "Grass", 100, "", 150, 0);
+		addMove("Special", "Shallow Grass Cut", "Grass", 100, "Bleed", 40, 0, 30);
+		addMove("Special", "Branch Throw", "Grass", 100, "", 50, 0, 30);
+		addMove("Special", "Dirty Shot", "Grass", 100, "Photosynthesis", 60, 0, 30);
+		addMove("Special", "Leaf Blow", "Grass", 100, "", 50, 0, 30);
+		addMove("Special", "Vine Lash", "Grass", 100, "Bleed", 80, 0, 20);
+		addMove("Special", "Herb Clash", "Grass", 100, "", 75, 0, 20);
+		addMove("Special", "HayMaker", "Grass", 100, "", 90, 0, 20);
+		addMove("Special", "Weeping Willow", "Grass", 100, "", 70, 0, 20);
+		addMove("Special", "Jungle Junction", "Grass", 100, "Photosynthesis", 120, 0, 10);
+		addMove("Special", "Uprooted", "Grass", 100, "", 150, 0, 10);
 		//status grass moves (temp)
-		addMove("Status", "Flower Dance", "Grass", 100, "", 0, 0);
+		addMove("Status", "Flower Dance", "Grass", 100, "", 0, 0, 5);
 		
 		//physical water moves
 		
 		//special water moves
+		
+		//status water moves
+		
+		//physical Fire moves
+		addMove("Physical", "Flame Kick", "Fire", 80, "", 30, 0, 30);
+		addMove("Physical", "Searing Punch", "Fire", 80, "", 40, 0, 30);
+		addMove("Physical", "Light Flicker", "Fire", 100, "", 30, 0, 30);
+		addMove("Physical", "Bonfire Rush", "Fire", 100, "", 60, 0, 30);
+		addMove("Physical", "Fiery Uppercut", "Fire", 100, "", 70, 0, 20);
+		addMove("Physical", "Enflamed Glove", "Fire", 100, "", 75, 0, 20);
+		addMove("Physical", "1000 Deg Blaze", "Fire", 100, "Daze", 60, 0, 20);
+		addMove("Physical", "Smoldering Entombment", "Fire", 100, "", 90, 0, 20);
+		addMove("Physical", "MALEVOLENT KITCHEN", "Fire", 110, "Extra Turn", 0, 0, 10);
+		addMove("Physical", "ASHES OF POMPEII", "Fire", 100, "Confuse", 0, 0, 10);
+		//special fire moves
+		addMove("Special", "Fire Dart", "Fire", 100, "", 40, 0, 30);
+		addMove("Special", "Boulder of Ash", "Fire", 100, "", 50, 0, 30);
+		addMove("Special", "Flame Ignition", "Fire", 100, "Burn", 30, 0, 30);
+		addMove("Special", "Flame Pebbles", "Fire", 100, "", 40, 0, 30);
+		addMove("Special", "Meteor Shower", "Fire", 100, "Burn", 80, 0, 20);
+		addMove("Special", "Swelling Inferno", "Fire", 100, "Melting Point", 40, 0, 20);
+		addMove("Special", "Hot Cross Buns", "Fire", 100, "", 90, 0, 20);
+		addMove("Special", "Volcanic Disruption", "Fire", 100, "", 100, 0, 20);
+		addMove("Special", "Magma Bound", "Fire", 100, "Melting Point", 140, 0, 10);
+		addMove("Special", "Lava Flood", "Fire", 100, "Burn", 130, 0, 10);
+		
+		//status fire moves
+		addMove("Status", "Rising Phoenix", "Fire", 0, "Heal", 0, 0, 5);
 	}
 	
-	public void addMove(String attackType, String name, String type, double accuracy, String effect, int power, int dps) {
+	public void addMove(String attackType, String name, String type, int accuracy, String effect, int power, int dps, int pp) {
 		
 		if(attackType.equals("Physical")) {
-			Physical move = new Physical(name, type, accuracy, effect, power);
+			Physical move = new Physical(name, type, accuracy, effect, power, pp);
 			physicalMoves.put(move.name, move);
 		} else if(attackType.equals("Special")) {
-			Special move = new Special(name, type, accuracy, effect, power, dps);
+			Special move = new Special(name, type, accuracy, effect, power, dps, pp);
 			specialMoves.put(move.name, move);
 		} else if(attackType.equals("Status")) {
-			Status move = new Status(name, type, accuracy, effect);
+			Status move = new Status(name, type, accuracy, effect, power, pp);
 			statusMoves.put(move.name, move);
 		}
 		
