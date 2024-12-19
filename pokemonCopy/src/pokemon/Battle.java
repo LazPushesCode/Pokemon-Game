@@ -1162,11 +1162,20 @@ public class Battle {
 					StringBuilder sb2 = new StringBuilder(curr.model[i].substring(18,36));
 					chunks.get(row).get(col).grid[i] = sb1.toString();
 					chunks.get(row).get(col+1).grid[i] = sb2.toString();
+					StringBuilder sb3 = new StringBuilder(enemy.model[i].substring(0,18));
+					StringBuilder sb4 = new StringBuilder(enemy.model[i].substring(18,36));
+					chunks.get(row).get(col+5).grid[i] = sb3.toString();
+					chunks.get(row).get(col+6).grid[i] = sb4.toString();
 				} else {
-					StringBuilder sb1 = new StringBuilder(curr.model[i-5].substring(0,18));
-					StringBuilder sb2 = new StringBuilder(curr.model[i-5].substring(18,36));
+					StringBuilder sb1 = new StringBuilder(curr.model[i].substring(0,18));
+					StringBuilder sb2 = new StringBuilder(curr.model[i].substring(18,36));
 					chunks.get(row+1).get(col).grid[i-5] = sb1.toString();
 					chunks.get(row+1).get(col+1).grid[i-5] = sb2.toString();
+					System.out.println(enemy.model[i]);
+					StringBuilder sb3 = new StringBuilder(enemy.model[i].substring(0,18));
+					StringBuilder sb4 = new StringBuilder(enemy.model[i].substring(18,36));
+					chunks.get(row+1).get(col+5).grid[i-5] = sb3.toString();
+					chunks.get(row+1).get(col+6).grid[i-5] = sb4.toString();
 				}
 			}catch(Exception e) {
 				e.printStackTrace();

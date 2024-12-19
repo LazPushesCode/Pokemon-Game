@@ -35,16 +35,9 @@ public class Poke {
 	int impacttimer, debufftimer, statustimer;
 	Poke(String name, Collection collection, int level){
 		model = new String[10];
-		model[0] = "                                    ";
-		model[1] = "                                    ";
-		model[2] = "                                    ";
-		model[3] = "                                    ";
-		model[4] = "                                    ";
-		model[5] = "                                    ";
-		model[6] = "                                    ";
-		model[7] = "                                    ";
-		model[8] = "                                    ";
-		model[9] = "                                    ";
+		for(int i = 0; i < 10; i++) {
+			model[i] = collection.get(name).model[i];
+		}
 		movesets = new ArrayList<>();
 		this.level = level; this.xp = 0;
 		movesets.add(collection.get(name).moves.get(0));

@@ -41,9 +41,8 @@ class game {
 		user.backpack.addItem("Normal Potion", itemshop.returnItem("Normal Potion"));
 		user.backpack.addItem("Super Potion", itemshop.returnItem("Super Potion"));
 		user.backpack.addItem("Hyper Potion", itemshop.returnItem("Hyper Potion"));
-		
-		
 		Battle simulation = new Battle();
+		
 		GrassPuzzle grasspuzzle = new GrassPuzzle();
 		spaces();
 		//load chunks -> print map -> take input -> repeat
@@ -120,7 +119,7 @@ class Tutorial{
 		positions[pos] = ">";
 		while(term == 0 ) {
 			game.spaces();
-			System.out.println(positions[0] + " Fizard          " + positions[1] +" Aqualard          " + positions[2] + " Leaflet");
+			System.out.println(positions[0] + " Fizard          " + positions[1] +" Aqualard          " + positions[2] + " TreeKat");
 			input = scan.next();
 			if(input.equals("a") && pos != 0) {
 				positions[pos] = " ";
@@ -138,15 +137,15 @@ class Tutorial{
 					user.addPokemonToRoster(fizard);
 					System.out.println("Fizard has been added to your party!");
 				} else if(pos == 1) {
-					Poke aqualard = new Poke("Aqualard", collection, 5);
+					Poke aqualard = new Poke("Aqualard", collection, 15);
 					user.addToPokeDex(aqualard);
 					user.addPokemonToRoster(aqualard);
 					System.out.println("Aqualard has been added to your party!");
 				} else if(pos == 2) {
-					Poke leaflet = new Poke("TreeKat", collection, 5);
+					Poke leaflet = new Poke("TreeKat", collection, 15);
 					user.addToPokeDex(leaflet);
 					user.addPokemonToRoster(leaflet);
-					System.out.println("Leaflet has been added to your party!");
+					System.out.println("TreeKat has been added to your party!");
 				}
 				
 				if(user.pokedex != null) {
