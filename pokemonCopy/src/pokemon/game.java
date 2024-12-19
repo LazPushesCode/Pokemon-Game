@@ -3,6 +3,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.Random;
 import pokemon.Map;
 import pokemon.Map.chunk;
@@ -12,11 +13,11 @@ import pokemon.Collection;
 import pokemon.Puzzle;
 import java.util.HashMap;
 import pokemon.Battle;
+import pokemon.Item;
 import java.util.function.Function;
 
 class game {
 	public static void main(String[] args) {
-		
 		String input = "";
 		Scanner scan = new Scanner(System.in);
 		Player user = new Player();
@@ -27,40 +28,54 @@ class game {
 		ItemShopDatabase itemshop = new ItemShopDatabase();
 		AttackDatabase attackLib = new AttackDatabase();
 		Collection collection = new Collection(attackLib);
-		
+		Generate gen = new Generate(collection);
 		Tutorial.tutorial(user, map, collection);
 		
 		String currMap;
 		String currSize;
 		input = scan.next();
 		user.customize();
-		
+		Random ran = new Random();
 		//create Battle class (holds data useful for battle simulation and simulates the battle itself).
 		
 		user.backpack.addItem("Normal Potion", itemshop.returnItem("Normal Potion"));
 		user.backpack.addItem("Super Potion", itemshop.returnItem("Super Potion"));
 		user.backpack.addItem("Hyper Potion", itemshop.returnItem("Hyper Potion"));
 		
-		Battle simulation = new Battle();
-		Poke test = new Poke("Stickly", collection, "random20-30");
-		map.mapDialogue("Hello World!                  ");
-		simulation.OverviewBattleWild(user, test, map.chunks, map);
 		
+		Battle simulation = new Battle();
 		GrassPuzzle grasspuzzle = new GrassPuzzle();
 		spaces();
 		//load chunks -> print map -> take input -> repeat
+		int randomValue;
 		while(user.execute == 0) {
 			spaces();
 			currMap = Map.mapGen;
 			currSize = Map.size;
-			
 			//checks for the size of the map, then loads chunks and prints it based off the size.
 			//small - 8  : 11; 
-			//big   - 24 : 33;
-			System.out.println("row: " + Map.userrow + " col: " + Map.usercol);	
+			//big   - 24 : 33;	
+				System.out.println("Row: " + map.userrow + " col: " + map.usercol);
 				map.loadChunks(currMap, grasspuzzle);
 				map.printMap(user, currMap);
-			
+				randomValue = ran.nextInt(1, 101);
+				if(map.chunks.get(Map.userrow).get(Map.usercol).generation == 1 && randomValue < 11 && Player.encountercooldown == 0 && user.numDead != Player.numRoster) {
+					String area = null;
+					if(Map.mapGen.equals("World1") && Map.usercol > 3) area = "World1_area1";
+					if(Map.mapGen.equals("World1") && Map.usercol < 3) area = "World1_area2";
+					try {
+						Poke wildPoke = gen.generatePoke(area, collection);
+						System.out.println("Name: " + wildPoke.name + " level: " + wildPoke.level);
+						simulation.mapDialogue(map.chunks, "Something lurks in the grass...                                                                               > continue                              ");
+						simulation.OverviewBattleWild(user, wildPoke, map.chunks, map);
+						user.updateDead();
+						user.checkForLevelUp(collection, map.chunks);
+					}catch(Exception e) {
+						e.printStackTrace();
+						System.out.println("Failed");
+					}
+				}
+				if(Player.encountercooldown != 0) Player.encountercooldown--;
 
 			//handles the input provided by user, which is processed and influences the chunks and printing of the map (takeInput leads to backbone of game)
 			input = scan.next();
@@ -90,11 +105,11 @@ class Tutorial{
 			System.out.println();
 			System.out.println("- The game requires the player to type in a key and then press enter in order to do actions");
 			System.out.println();
-			System.out.println("- There is currently no system to save progress, which doesn't matter because THERE AREN'T ANY POKEMONS YET LOL");
+			System.out.println("- There is currently no system to save progress. It is possible to capture pokemon, but currently the pokedex is still being worked on.");
 			System.out.println();
-			System.out.println("- Typical 'w a s d' movement with 'c' as the interact/confirm button. Press 'o' to execute the game");
+			System.out.println("- Typical 'w a s d' movement with 'c' as the interact/confirm button and 't' as the open menu button. Press 'o' to execute the game");
 			System.out.println();
-			System.out.println("- Have fun walking around for now I guess :)");
+			System.out.println("- Have fun walking around and fighting some pokemon!");
 			input = scan.next();
 		game.spaces();
 		String[] positions = new String[3];
@@ -118,17 +133,17 @@ class Tutorial{
 			} else if(input.equals("c")) {
 				if(pos == 0) {
 					//hp, attack, sp.attack, defense, sp.defense, speed;
-					Poke fizard = new Poke("Fizard", collection, "random20-30");
+					Poke fizard = new Poke("Fizard", collection, 15);
 					user.addToPokeDex(fizard);
 					user.addPokemonToRoster(fizard);
 					System.out.println("Fizard has been added to your party!");
 				} else if(pos == 1) {
-					Poke aqualard = new Poke("Aqualard", collection, "starter");
+					Poke aqualard = new Poke("Aqualard", collection, 5);
 					user.addToPokeDex(aqualard);
 					user.addPokemonToRoster(aqualard);
 					System.out.println("Aqualard has been added to your party!");
 				} else if(pos == 2) {
-					Poke leaflet = new Poke("Leaftlet", collection, "starter");
+					Poke leaflet = new Poke("TreeKat", collection, 5);
 					user.addToPokeDex(leaflet);
 					user.addPokemonToRoster(leaflet);
 					System.out.println("Leaflet has been added to your party!");

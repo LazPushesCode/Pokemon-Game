@@ -481,6 +481,10 @@ public void setChunkValues(String area) {
 		chunks.get(2).get(6).enterable=1;
 		setChunksNonInteractable();
 		chunks.get(6).get(0).enterArea = "PokeLab1";chunks.get(6).get(9).enterArea = "House";chunks.get(2).get(3).enterArea = "Gym1";chunks.get(2).get(6).enterArea = "PokeStop1";
+		chunks.get(6).get(5).generation = 1;chunks.get(5).get(5).generation = 1;chunks.get(5).get(6).generation = 1;chunks.get(1).get(8).generation = 1;
+			for(int i = 2; i < 6; i++) {
+				chunks.get(i).get(7).generation = 1;chunks.get(i).get(8).generation = 1;
+			}
 	}
 	if(area.equals("PokeStop1")) {
 		for(int i = 0; i < 11; i++) {
@@ -650,7 +654,7 @@ public class chunk{
 	String[]grid;
 	int up, down, left, right;
 	int enterable;
-	int interactable;
+	int interactable; int generation;
 	String enterArea;
 	int row, col;
 	chunk(){
@@ -658,24 +662,14 @@ public class chunk{
 		for(int i = 0; i < 5; i++) {
 			grid[i] = "                  ";
 		}
-		up = 0;
-		down = 0;
-		left = 0;
-		right = 0;
-		enterable = 0;
-		interactable = 0;
+		up = 0;down = 0;left = 0;right = 0;enterable = 0;interactable = 0;generation = 0;
 	}	
 	chunk(int row, int col){
 		grid = new String[5];
 		for(int i = 0; i < 5; i++) {
 			grid[i] = "                  ";
 		}
-		up = 0;
-		down = 0;
-		left = 0;
-		right = 0;
-		enterable = 0;
-		interactable = 1;
+		up = 0;down = 0;left = 0;right = 0;enterable = 0;interactable = 1;generation = 0;
 		this.row = row; this.col = col;
 	}	
 }

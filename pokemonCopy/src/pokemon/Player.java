@@ -21,7 +21,7 @@ class Player{
 	static int gold = 100000000;
 	static int numRoster= 0;
 	static int numPokedex = 0;
-	int execute = 0;
+	int execute = 0; static int encountercooldown = 0; int numDead = 0;
 	Player(){
 		rosterlist = new ArrayList<Poke>(6);
 		backpack = new Backpack();
@@ -49,7 +49,17 @@ class Player{
 	public void healAllPokemon() {
 		for(String key : roster.keySet()) {
 			roster.get(key).temphp = roster.get(key).hp;
+			numDead = 0;
 		}	
+	}
+	
+	public void updateDead() {
+		numDead = 0;
+		for(int i = 0; i < Player.numRoster; i++) {
+			if(rosterlist.get(i).temphp == 0) {
+				numDead++;
+			}
+		}
 	}
 	
 	
@@ -659,6 +669,15 @@ class Player{
 		}
 	}
 	
+	public void checkForLevelUp(Collection collection, ArrayList<ArrayList<chunk>> chunks) {
+		for(int i = 0; i < numRoster; i++) {
+			int res = rosterlist.get(i).checkLevel(collection);
+			if(res == 1) {
+				mapDialogue(chunks, rosterlist.get(i).name + " has leveled up to level " + rosterlist.get(i).level + "!                                                                             ");
+			}
+		}
+	}
+	
 	public void loadPokemonStats(ArrayList<ArrayList<chunk>> chunks, int pindex) {
 		Scanner scan = new Scanner(System.in);
 		String input = "";
@@ -854,6 +873,95 @@ class Player{
 			if(input.equals("o")) break;
 		}
 		
+	}
+	public void printMethod(ArrayList<ArrayList<chunk>> chunks) {
+		game.spaces();
+		System.out.println("_".repeat(200));
+		for(int j = 0; j < 8; j++) {
+			for(int i = 0; i < 5; i++) {
+				System.out.print("|");
+				
+				for(int col = 0; col < 11; col++) {
+					System.out.print(chunks.get(j).get(col).grid[i]);
+				}
+			if(i != 7) {
+				System.out.println("|");
+			}
+			}
+		}
+	}
+	public void mapDialogue(ArrayList<ArrayList<chunk>> chunks,String sentence) {
+		// 3, 4, 5, 6, 7, 8
+		chunks.get(5).get(2).grid[0] = " ~~~~~~~~~~~~~~~~~";
+		chunks.get(5).get(2).grid[1] = "|                 ";
+		chunks.get(5).get(2).grid[2] = "|                 ";
+		chunks.get(5).get(2).grid[3] = "|                 ";
+		chunks.get(5).get(2).grid[4] = "|                 ";
+		chunks.get(6).get(2).grid[0] = "|                 ";
+		chunks.get(6).get(2).grid[1] = "|                 ";
+		chunks.get(6).get(2).grid[2] = "|                 ";
+		chunks.get(6).get(2).grid[3] = "|                 ";
+		chunks.get(6).get(2).grid[4] = " ~~~~~~~~~~~~~~~~~";
+		
+		chunks.get(5).get(9).grid[0] = "~~~~~~~~~~~~~~~~~ ";
+		chunks.get(5).get(9).grid[1] = "                 |";
+		chunks.get(5).get(9).grid[2] = "                 |";
+		chunks.get(5).get(9).grid[3] = "                 |";
+		chunks.get(5).get(9).grid[4] = "                 |";
+		chunks.get(6).get(9).grid[0] = "                 |";
+		chunks.get(6).get(9).grid[1] = "                 |";
+		chunks.get(6).get(9).grid[2] = "                 |";
+		chunks.get(6).get(9).grid[3] = "                 |";
+		chunks.get(6).get(9).grid[4] = "~~~~~~~~~~~~~~~~~ ";
+		for(int i = 3; i < 9; i++) {
+			chunks.get(5).get(i).grid[0] = "~~~~~~~~~~~~~~~~~~";
+			chunks.get(5).get(i).grid[1] = "                  ";
+			chunks.get(5).get(i).grid[2] = "                  ";
+			chunks.get(5).get(i).grid[3] = "                  ";
+			chunks.get(5).get(i).grid[4] = "                  ";
+			chunks.get(6).get(i).grid[0] = "                  ";
+			chunks.get(6).get(i).grid[1] = "                  ";
+			chunks.get(6).get(i).grid[2] = "                  ";
+			chunks.get(6).get(i).grid[3] = "                  ";
+			chunks.get(6).get(i).grid[4] = "~~~~~~~~~~~~~~~~~~";
+		}
+		String fragmented = sentence;
+		int end = 18;
+		int chunkCol = 3; int gridRow = 2; int chunkRow = 5;
+		int i = 0;
+		try {
+		for(i = 0; i < sentence.length(); i += 18) {
+			chunks.get(chunkRow).get(chunkCol).grid[gridRow] = sentence.substring(i, end);
+			end += 18;
+			if(end > sentence.length()) {
+				end = sentence.length();
+			}
+			if(chunkCol == 8) {
+				gridRow += 2;
+				if(gridRow == 6) {
+					gridRow = 1;
+					chunkRow++;
+				}
+				chunkCol = 3;
+			} else {
+				chunkCol++;
+			}
+			if(end == sentence.length()) break;
+		}
+			for(int start = i; start <  19; start++) {
+				chunks.get(chunkRow).get(chunkCol).grid[gridRow].concat(" ");
+			}	
+		String input = "";
+		Scanner scan = new Scanner(System.in);
+		while(true) {
+			printMethod(chunks);
+			input = scan.next();
+			if(input.equals("c"))break;
+		}
+		} catch(Exception e) {
+			System.out.println("Could not print dialogue...");
+
+		}	
 	}
 
 }

@@ -4,9 +4,9 @@ import java.util.Scanner;
 import pokemon.Map;
 import pokemon.Map.chunk;
 import java.util.ArrayList;
+import java.lang.reflect.Method;
 
-
-public class Item {
+public abstract class Item {
 	String name;
 	int amount;
 	int cost;
@@ -23,6 +23,34 @@ public class Item {
 		this.description = description;
 	}
 	
+	public void applyItem(Poke curr, Item item, ArrayList<ArrayList<chunk>> chunks, Player user) {
+		if(item instanceof Potion) {
+			applyPotion(curr, (Potion) item, chunks);
+		} else if(item instanceof Vitamin) {
+			applyVitamin(curr, (Vitamin) item, chunks);
+		} else if(item instanceof Band) {
+			applyBand(curr, (Band) item, chunks);
+		}
+		item.decrementItem(user);
+	}
+	
+	public void applyPotion(Poke curr, Potion item, ArrayList<ArrayList<chunk>> chunks) {
+		curr.temphp += item.HPGiven;
+		if(curr.temphp > curr.hp) curr.temphp = curr.hp;
+	}
+	
+	public void applyVitamin(Poke curr, Vitamin item, ArrayList<ArrayList<chunk>> chunks) {
+		curr.EV[item.stat] += 10;
+	}
+	
+	public void applyBand(Poke curr, Band item, ArrayList<ArrayList<chunk>> chunks) {
+		curr.itemHeld = item;
+	}
+	public void decrementItem(Player user) {
+		amount--;
+		if(amount == 0) user.backpack.items.remove(name);
+	}
+	
 }
 class Potion extends Item{
 	double HPGiven;
@@ -33,10 +61,10 @@ class Potion extends Item{
 	}
 }
 class Band extends Item{
-	String stat;
-	Band(String name, int amount, String statName, int cost){
+	int stat;
+	Band(String name, int amount, int stat, int cost){
 		super(name, amount, cost);
-		stat = statName;
+		this.stat = stat;
 	}
 }
 class Berries extends Item{
@@ -54,8 +82,8 @@ class Ball extends Item{
 	}
 }
 class Vitamin extends Item{
-	String stat;
-	Vitamin(String name, int amount, String stat, int cost){
+	int stat;
+	Vitamin(String name, int amount, int stat, int cost){
 		super(name, amount, cost);
 		this.stat = stat;
 	}
@@ -127,39 +155,39 @@ class ItemShopDatabase{
 		addItem(maxPotion.name, maxPotion);
 		
 		//add vitamins to shop
-		Vitamin protein = new Vitamin("Protein", 0, "attack", 9800);
+		Vitamin protein = new Vitamin("Protein", 0, 1, 9800);
 		protein.addDescription("The Protein Vitamin provides the given pokemon additional Attack stat points.");
 		addItem(protein.name, protein);
-		Vitamin iron = new Vitamin("Iron", 0, "Defense", 9800);
+		Vitamin iron = new Vitamin("Iron", 0, 3, 9800);
 		iron.addDescription("The Iron Vitamin provides the given pokemon additional Defense stat points.");
 		addItem(iron.name, iron);
-		Vitamin calcium = new Vitamin("Calcium", 0, "spAttack", 9800);
+		Vitamin calcium = new Vitamin("Calcium", 0, 2, 9800);
 		calcium.addDescription("The Calcium Vitamin provides the given pokemon additional sp.Attack stat points.");
 		addItem(calcium.name, calcium);
-		Vitamin zinc = new Vitamin("Zinc", 0, "spDefense", 9800);
+		Vitamin zinc = new Vitamin("Zinc", 0, 4, 9800);
 		zinc.addDescription("The Zinc Vitamin provides the given pokemon additional sp.Defense stat points.");
 		addItem(zinc.name, zinc);
-		Vitamin carbos = new Vitamin("Carbos", 0, "speed", 9800);
+		Vitamin carbos = new Vitamin("Carbos", 0, 5, 9800);
 		carbos.addDescription("The Carbos Vitamin provides the given pokemon additional Speed stat points.");
 		addItem(carbos.name, carbos);
 		
 		//add bands to shop
-		Band anklet = new Band("Anklet", 0, "speed", 10000);
+		Band anklet = new Band("Anklet", 0, 5, 10000);
 		anklet.addDescription("The Anklet Band provides the given pokemon a boost to their Speed stat gains.");
 		addItem(anklet.name, anklet);
-		Band armor = new Band("Armor", 0, "spDefense", 10000);
+		Band armor = new Band("Armor", 0, 4, 10000);
 		armor.addDescription("The Armor Band provides the given pokemon a boost to their sp.Defense stat gains.");
 		addItem(armor.name, armor);
-		Band belt = new Band("Belt", 0, "defense", 10000);
+		Band belt = new Band("Belt", 0, 3, 10000);
 		belt.addDescription("The Belt Band provides the given pokemon a boost to their Defense stat gains.");
 		addItem(belt.name, belt);
-		Band bracer = new Band("Bracer", 0, "attack", 10000);
+		Band bracer = new Band("Bracer", 0, 1, 10000);
 		bracer.addDescription("The Bracer Band provides the given pokemon a boost to their Attack stat gains.");
 		addItem(bracer.name, bracer);
-		Band lens = new Band("Lens", 0, "spAttack", 10000);
+		Band lens = new Band("Lens", 0, 2, 10000);
 		lens.addDescription("The Lens Band provides the given pokemon a boost to their sp.Attack stat gains.");
 		addItem(lens.name, lens);
-		Band weight = new Band("Weight", 0, "hp", 10000);
+		Band weight = new Band("Weight", 0, 0, 10000);
 		weight.addDescription("The Weight Band provides the given pokemon a boost to their HP stat gains.");
 		addItem(weight.name, weight);
 	}
@@ -175,6 +203,7 @@ class ItemShopDatabase{
 	public Item returnItem(String key) {
 		return items.get(key);
 	}
+	
 	
 	public void pokeStopMenu(Player user, String area, ItemShopDatabase items, ArrayList<ArrayList<chunk>> chunks, Map map) {
 		//start poke stop menu
