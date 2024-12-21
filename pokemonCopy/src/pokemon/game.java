@@ -42,7 +42,6 @@ class game {
 		user.backpack.addItem("Super Potion", itemshop.returnItem("Super Potion"));
 		user.backpack.addItem("Hyper Potion", itemshop.returnItem("Hyper Potion"));
 		Battle simulation = new Battle();
-		
 		GrassPuzzle grasspuzzle = new GrassPuzzle();
 		spaces();
 		//load chunks -> print map -> take input -> repeat
@@ -54,7 +53,7 @@ class game {
 			//checks for the size of the map, then loads chunks and prints it based off the size.
 			//small - 8  : 11; 
 			//big   - 24 : 33;	
-				System.out.println("Row: " + map.userrow + " col: " + map.usercol);
+				System.out.println("Row: " + Map.userrow + " col: " + Map.usercol);
 				map.loadChunks(currMap, grasspuzzle);
 				map.printMap(user, currMap);
 				randomValue = ran.nextInt(1, 101);
@@ -65,7 +64,7 @@ class game {
 					try {
 						Poke wildPoke = gen.generatePoke(area, collection);
 						System.out.println("Name: " + wildPoke.name + " level: " + wildPoke.level);
-						simulation.mapDialogue(map.chunks, "Something lurks in the grass...                                                                               > continue                              ");
+						Battle.mapDialogue(map.chunks, "Something lurks in the grass...                                                                               > continue                              ");
 						simulation.OverviewBattleWild(user, wildPoke, map.chunks, map);
 						user.updateDead();
 						user.checkForLevelUp(collection, map.chunks);
@@ -132,12 +131,12 @@ class Tutorial{
 			} else if(input.equals("c")) {
 				if(pos == 0) {
 					//hp, attack, sp.attack, defense, sp.defense, speed;
-					Poke fizard = new Poke("Fizard", collection, 15);
+					Poke fizard = new Poke("Fizard", collection, 5);
 					user.addToPokeDex(fizard);
 					user.addPokemonToRoster(fizard);
 					System.out.println("Fizard has been added to your party!");
 				} else if(pos == 1) {
-					Poke aqualard = new Poke("Aqualard", collection, 15);
+					Poke aqualard = new Poke("Aqualard", collection, 5);
 					user.addToPokeDex(aqualard);
 					user.addPokemonToRoster(aqualard);
 					System.out.println("Aqualard has been added to your party!");

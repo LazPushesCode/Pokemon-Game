@@ -57,7 +57,7 @@ public class Collection {
 		pokemonCollection.get("TreeKat").model[8] =  "        | /  \\    /  \\ |            ";
 		pokemonCollection.get("TreeKat").model[9] =  "      ./ .\\  /.  .\\  /. \\.          ";
 		//world 1
-		addPokemon("Stickly", "Grass", "", 35, 55, 35, 45, 30, 70);
+		addPokemon("Stickly", "Grass", "", 35, 55, 35, 45, 30, 50);
 		pokemonCollection.get("Stickly").setMoves(attacks, "Leaf Kick", "Stick Puncture", "Dirty Hook", "Dirty Slap", "Branch Throw", "Leaf Blow", null, null);
 		pokemonCollection.get("Stickly").model[0] = "              |    |                ";
 		pokemonCollection.get("Stickly").model[1] = "              |    |                ";
@@ -69,7 +69,7 @@ public class Collection {
 		pokemonCollection.get("Stickly").model[7] = "             \\|    |                ";
 		pokemonCollection.get("Stickly").model[8] = "              |    |                ";
 		pokemonCollection.get("Stickly").model[9] = "              |    |                ";
-		addPokemon("GrassJumper", "Grass", "", 35, 60, 30, 40, 30, 100);
+		addPokemon("GrassJumper", "Grass", "", 35, 60, 30, 40, 30, 60);
 		pokemonCollection.get("GrassJumper").setMoves(attacks, "Shallow Grass Cut", "Branch Throw", "Dirty Shot", "Leaf Blow", "Leaf Kick", "Dirty Slap", null, null);
 		pokemonCollection.get("GrassJumper").model[0] = "                                      ";
 		pokemonCollection.get("GrassJumper").model[1] = "                                      ";
@@ -93,7 +93,7 @@ public class Collection {
 		pokemonCollection.get("Raccadox").model[7] = "     _______   /        \\           ";
 		pokemonCollection.get("Raccadox").model[8] = "    (|_|_|  \\ | ' '   '  |            ";
 		pokemonCollection.get("Raccadox").model[9] = "          \\__\\|   '  ' ' |          ";
-		addPokemon("Crow-Bow", "Grass", "", 45, 75, 40, 70, 40, 90);
+		addPokemon("Crow-Bow", "Grass", "", 45, 75, 40, 70, 40, 70);
 		pokemonCollection.get("Crow-Bow").setMoves(attacks, "Lawn Mower", "Tangled Vines", "Dirty Slap", "Stick Puncture", "Dirty Hook", "Hack-a-Tree", null, null);
 		pokemonCollection.get("Crow-Bow").model[0] = "                                     ";
 		pokemonCollection.get("Crow-Bow").model[1] = "                                     ";
@@ -141,7 +141,7 @@ public class Collection {
 		pokemonCollection.get("VineTurtle").model[7] = "    |  /__\\__/__\\__/ |_/             ";
 		pokemonCollection.get("VineTurtle").model[8] = "     []            []                 ";
 		pokemonCollection.get("VineTurtle").model[9] = "                                    ";
-		addPokemon("ToxRat", "Grass", "Poison", 25, 20, 80, 40, 40, 90);
+		addPokemon("ToxRat", "Grass", "Poison", 25, 20, 80, 40, 40, 80);
 		pokemonCollection.get("ToxRat").setMoves(attacks, "Bad Breath", "Erosive Wack", "Toxic Spit", "Poison Arrow", null, null, null, null);
 		pokemonCollection.get("ToxRat").model[0] = "                                     ";
 		pokemonCollection.get("ToxRat").model[1] = "    ___________                       ";
@@ -153,7 +153,7 @@ public class Collection {
 		pokemonCollection.get("ToxRat").model[7] = " \\ \\_/    '       '  |   '  \\         ";
 		pokemonCollection.get("ToxRat").model[8] = "  \\_|____'______'___/ '---o--*        ";
 		pokemonCollection.get("ToxRat").model[9] = "     \\\\_.      \\\\_.                  ";
-		addPokemon("Banopotamus", "Grass", "Poison", 80, 90, 30, 55, 50, 50);
+		addPokemon("Banopotamus", "Grass", "Poison", 80, 90, 30, 55, 50, 40);
 		pokemonCollection.get("Banopotamus").setMoves(attacks, "Bad Breath", "Purple Splash", "Poison Arrow", "Toxin Mask", "Twisted Thicket", null, null, null);
 		pokemonCollection.get("Banopotamus").model[0] = "                                    ";
 		pokemonCollection.get("Banopotamus").model[1] = "                                    ";
@@ -177,7 +177,7 @@ public class Collection {
 		pokemonCollection.get("Bark-Widow").model[7] = "         /\\|______|/\\                ";
 		pokemonCollection.get("Bark-Widow").model[8] = "        /  (_*,,*_)   \\               ";
 		pokemonCollection.get("Bark-Widow").model[9] = "                                    ";
-		addPokemon("Thunder-Bunny", "Grass", "Electric", 40, 75, 35, 30, 75, 100);
+		addPokemon("Thunder-Bunny", "Grass", "Electric", 40, 75, 35, 30, 75, 110);
 		pokemonCollection.get("Thunder-Bunny").setMoves(attacks, "Quick Attack", "Static Beat", "Zappify", "Thunder Clap", null, null, null, null);
 		pokemonCollection.get("Thunder-Bunny").model[0] = "                                     ";
 		pokemonCollection.get("Thunder-Bunny").model[1] = "                                     ";
@@ -189,7 +189,7 @@ public class Collection {
 		pokemonCollection.get("Thunder-Bunny").model[7] = "       (  ,  '  ,   )                   ";
 		pokemonCollection.get("Thunder-Bunny").model[8] = "       \\   , , ,   /                   ";
 		pokemonCollection.get("Thunder-Bunny").model[9] = "      (__/ || || \\__)                ";
-		addPokemon("Lumin-Fox", "Grass", "Electric", 60, 40, 35, 55, 60, 60); 
+		addPokemon("Lumin-Fox", "Grass", "Electric", 60, 40, 35, 55, 60, 100); 
 		pokemonCollection.get("Lumin-Fox").setMoves(attacks, "Quick Attack", "Static Beat", "Volt Smack", "Electrocute", "Voltaic Blast", "Electric Boogaloo", null, null);
 		pokemonCollection.get("Lumin-Fox").model[0] = "                                          ";
 		pokemonCollection.get("Lumin-Fox").model[1] = "                                           ";

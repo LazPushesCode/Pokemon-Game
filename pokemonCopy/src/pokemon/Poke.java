@@ -22,6 +22,8 @@ public class Poke {
 	int EVcount;
 	int temphp;
 	int tempstats[];
+	int percent;
+	int shield;
 	ArrayList<Attack> movesets;
 	String[] model;
 	
@@ -78,6 +80,7 @@ public class Poke {
 		tempstats = new int[5];
 		this.tempstats[0] = this.speed;this.tempstats[1] = this.attack; this.tempstats[2] = this.spAttack;
 		this.tempstats[3] = this.defense;this.tempstats[4] = this.spDefense;
+		percent = 0; shield = 0;
 	}
 	public void initializeStats() {
 		Random ran = new Random();

@@ -55,17 +55,12 @@ public class Generate {
 		
 		
 		levels = new HashMap<>();
-		levels.put("1 15", 5);
-		levels.put("16 30", 6);
-		levels.put("31 50", 7);
-		levels.put("51 63", 8);
-		levels.put("64 73", 9);
-		levels.put("74 78", 10);
-		levels.put("79 83", 11);
-		levels.put("84 88", 12);
-		levels.put("89 93", 13);
-		levels.put("94 97", 14);
-		levels.put("98 100", 15);
+		levels.put("1 30", 5);
+		levels.put("31 60", 6);
+		levels.put("61 80", 7);
+		levels.put("81 90", 8);
+		levels.put("91 95", 9);
+		levels.put("96 100", 10);
 
 	}
 	
@@ -77,6 +72,7 @@ public class Generate {
 	public Poke locateArea(String area, Collection collection) {
 		while(true) {
 			Poke pokemon;
+			int percent = 0;
 			Random ran = new Random();
 			int chance = ran.nextInt(1, 101);
 			int lvl = 0; String name = ""; int level = 0;
@@ -95,6 +91,7 @@ public class Generate {
 				}
 				if(chance >= value[0] && chance <= value[1]) {
 					name = world1_area1.get(key);
+					percent = value[1]-value[0];
 					break;
 				}
 			}
@@ -112,6 +109,8 @@ public class Generate {
 			}
 			try {
 				pokemon = new Poke(name, collection, level);
+				pokemon.percent = percent;
+				System.out.println("Percent: " + percent + " pokepercent: " + pokemon.percent);
 				return pokemon;
 			}catch(Exception e) {
 				

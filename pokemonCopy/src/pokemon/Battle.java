@@ -6,6 +6,7 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.Random;
 import pokemon.Map;
+import pokemon.Effect;
 import pokemon.Map.chunk;
 import pokemon.Poke;
 import pokemon.Player;
@@ -53,8 +54,10 @@ public class Battle {
 	
 	public void OverviewBattleWild(Player user, Poke wildpoke, ArrayList<ArrayList<chunk>> chunks, Map map) {
 		int userchoice = 0;
+		ArrayList<Poke> involvedPokemon = new ArrayList<>();
 		while(true) {
 			userchoice = choosePokemon(user, wildpoke, chunks, map);
+			if(!involvedPokemon.contains(user.rosterlist.get(userchoice))) involvedPokemon.add(user.rosterlist.get(userchoice));
 			if(Player.numRoster > userchoice) {
 				break;
 			}
@@ -81,14 +84,29 @@ public class Battle {
 			} else if(result == 0) {
 				//player won
 				Player.encountercooldown = 5;
-				user.rosterlist.get(userchoice).xp += 20;
 				mapDialogue(chunks, "You've successfully beaten the wild pokemon!                                           ");
+				distributeXP(user, involvedPokemon, wildpoke, map);
 			} else if(result == 1) {
 				//pokemon won
 				user.numDead++;
 			}
 		}
 		
+	}
+	
+	public void distributeXP(Player user, ArrayList<Poke> list, Poke enemy, Map map) {
+		int temp = 0;
+		if(enemy.percent == 1) {
+			temp = 1;
+		} else {
+			temp = (1%enemy.percent);
+		}
+		int exp = (temp * enemy.level) * 5;
+		exp = exp/list.size();
+		for(int i = 0; i < list.size(); i++) {
+			list.get(i).xp += exp;
+			mapDialogue(map.chunks, list.get(i).name + " has obtained " + exp + " experience!                                            ");
+		}		
 	}
 	
 	
@@ -211,13 +229,14 @@ public class Battle {
 	}
 	
 	public int simulateBattle(Player user, Poke enemy, ArrayList<ArrayList<chunk>> chunks, int userchoice, int wildflag, Map map) {
+		Effect effect = new Effect();
 		AI ai = new AI(enemy, user.rosterlist.get(userchoice));
 		ai.memorize(enemy, user.rosterlist.get(userchoice));
 		System.out.println("Impact: " + ai.impact + " Debuff: " + ai.debuff + " physical: " + ai.physical + " special: " + ai.special + " Status: " + ai.status);
 		if(enemy.speed > user.rosterlist.get(userchoice).speed) {
 			//enemy attacks first!
 			displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
-			int key = initiateTurn(user, enemy, userchoice, ai, map, 1);
+			int key = initiateTurn(user, enemy, userchoice, ai, map, effect, 1);
 		}
 		displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
 		int choicerow = 5; int choicecol = 1;
@@ -230,12 +249,21 @@ public class Battle {
 				mapDialogue(chunks, enemy.name + " has fainted!                                                                                                                  > continue                            ");
 				return 0;
 			}
-			checkTimers(enemy, user.rosterlist.get(userchoice), chunks); //decrement timers for the enemy pokemon, then decrement for ai 
+			checkTimers(enemy, user.rosterlist.get(userchoice), chunks, effect); //decrement timers for the enemy pokemon, then decrement for ai 
 			if(ai.impacttimer != 0)ai.impacttimer--;
 			if(ai.statustimer != 0)ai.statustimer--;
 			if(ai.debufftimer != 0)ai.debufftimer--;
-			if(!(user.rosterlist.get(userchoice).impact.equals("")))inflictImpact(user.rosterlist.get(userchoice), enemy, chunks);
-			if(!(user.rosterlist.get(userchoice).debuff.equals("")))inflictDebuff(user.rosterlist.get(userchoice), enemy, chunks);
+			if(!(user.rosterlist.get(userchoice).impact.equals("")))effect.inflictImpact(user.rosterlist.get(userchoice), enemy, chunks);
+			if(!(user.rosterlist.get(userchoice).debuff.equals(""))) {
+				if(!user.rosterlist.get(userchoice).debuff.equals("Photosynthesis")) {
+					effect.inflictDebuff(user.rosterlist.get(userchoice),enemy, chunks);
+				} else {
+					Random ran = new Random();
+					effect.Photosynthesis(user.rosterlist.get(userchoice),enemy,chunks, ran);
+				}
+				
+				effect.inflictDebuff(user.rosterlist.get(userchoice), enemy, chunks);
+			}
 			displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
 			termkey = 0;
 			while(termkey == 0) {
@@ -275,10 +303,10 @@ public class Battle {
 							choice = (choicerow-5) + (choicecol - 1);
 							if(choice == 0) {
 									//fight
-								int key = initiateTurn(user, enemy, userchoice, ai, map, 0); //user attacks
+								int key = initiateTurn(user, enemy, userchoice, ai, map, effect, 0); //user attacks
 								if(user.rosterlist.get(userchoice).impact.equals("Extra Turn")) {
-									key = initiateTurn(user,enemy,userchoice,ai,map,0);
-									checkTimers(user.rosterlist.get(userchoice), enemy, chunks);
+									key = initiateTurn(user,enemy,userchoice,ai,map, effect, 0);
+									checkTimers(user.rosterlist.get(userchoice), enemy, chunks, effect);
 								}
 								if(key == 1) break;
 							} else if(choice == 1) {
@@ -305,46 +333,55 @@ public class Battle {
 						}
 				}
 			}
-			checkTimers(user.rosterlist.get(userchoice), enemy, chunks); //decrement timers for the user pokemon
+			checkTimers(user.rosterlist.get(userchoice), enemy, chunks, effect); //decrement timers for the user pokemon
+			if(enemy.temphp == 0) {
+				mapDialogue(chunks, enemy.name + " has fainted!                                                                                                                  > continue                            ");
+				return 0;
+			}
 			if(enemy.impact.equals("Paralyze")) {
 				mapDialogue(chunks, enemy.name + "is paralyzed!                                                                                                      > continue                                    ");
 			} else {
-				int key = initiateTurn(user, enemy, userchoice, ai, map, 1); //ai attacks
+				int key = initiateTurn(user, enemy, userchoice, ai, map, effect, 1); //ai attacks
 				if(enemy.impact.equals("Extra Turn")) {
-					key = initiateTurn(user,enemy,userchoice,ai,map,1);
-					checkTimers(enemy, user.rosterlist.get(userchoice), chunks);
+					key = initiateTurn(user,enemy,userchoice,ai,map,effect,1);
+					checkTimers(enemy, user.rosterlist.get(userchoice), chunks, effect);
 				}
 			}
 			if(!(user.rosterlist.get(userchoice).status.equals(""))) {
-				inflictStatus(user.rosterlist.get(userchoice), chunks);
+				effect.inflictStatus(user.rosterlist.get(userchoice), chunks);
 			}
-			if(!(enemy.impact.equals(""))) {
-				inflictImpact(enemy, user.rosterlist.get(userchoice), chunks);
-			}
+			if(!(enemy.impact.equals("")))effect.inflictImpact(enemy, user.rosterlist.get(userchoice), chunks);
 			if(!(enemy.debuff.equals(""))) {
 				if(!enemy.debuff.equals("Photosynthesis")) {
-					inflictDebuff(enemy, user.rosterlist.get(userchoice), chunks);
+					effect.inflictDebuff(enemy, user.rosterlist.get(userchoice), chunks);
 				} else {
 					Random ran = new Random();
-					Photosynthesis(enemy, user.rosterlist.get(userchoice),chunks, ran);
+					effect.Photosynthesis(enemy, user.rosterlist.get(userchoice),chunks, ran);
 				}
 			}
 			if(!(enemy.status.equals(""))) {
-				inflictStatus(enemy, chunks);
+				effect.inflictStatus(enemy, chunks);
 			}
 		}
 	}
 	
-	public int initiateTurn(Player user, Poke enemy, int userchoice, AI ai, Map map, int key) {
+	public int initiateTurn(Player user, Poke enemy, int userchoice, AI ai, Map map, Effect effect, int key) {
 		int moveChosen;
 		Poke attacker; Poke defender;
 		if(key == 0) {
 			attacker = user.rosterlist.get(userchoice); defender = enemy;
-			moveChosen = displayFightMenu(user, defender, map.chunks, userchoice);
+			if(attacker.debuff.equals("Mud")) {
+				moveChosen = effect.Mud(attacker, map.chunks);
+			} else {
+				moveChosen = displayFightMenu(user, defender, map.chunks, userchoice);
+			}
 		} else {
 			attacker = enemy; defender = user.rosterlist.get(userchoice);
-			moveChosen = ai.decideMove(attacker, user.rosterlist.get(userchoice), map);
-			System.out.println(ai.impacttimer);
+			if(attacker.debuff.equals("Mud")) {
+				moveChosen = effect.Mud(attacker, map.chunks);
+			} else {
+				moveChosen = ai.decideMove(attacker, user.rosterlist.get(userchoice), map);
+			}
 		}	
 		if(moveChosen != 5) {
 			mapDialogue(map.chunks, attacker.name + " used " + attacker.movesets.get(moveChosen).name + "!                                                           > continue                                    ");
@@ -356,9 +393,9 @@ public class Battle {
 						double Accuracy = calculateAccuracy(attacker, defender, moveChosen);
 						Random ran = new Random();
 						if(Accuracy >= ran.nextInt(0, 100)) {
-							inflictDamage(attacker, defender, dmg, map.chunks, user.rosterlist.get(userchoice), enemy);
+							inflictDamage(attacker, defender, dmg, effect, map.chunks, user.rosterlist.get(userchoice), enemy);
 							if(!(attacker.movesets.get(moveChosen).effect.equals(""))) {
-								assignDebuff(defender, attacker, attacker.movesets.get(moveChosen), map.chunks);
+								effect.assignDebuff(defender, attacker, attacker.movesets.get(moveChosen), map.chunks);
 							}	
 					} else {
 						mapDialogue(map.chunks, attacker.name +"'s attack missed!                                                                                                                > continue                                    ");
@@ -368,7 +405,7 @@ public class Battle {
 				}
 			} else {
 				//is a status
-				assignDebuff(attacker, defender, attacker.movesets.get(moveChosen), map.chunks);
+				effect.assignDebuff(attacker, defender, attacker.movesets.get(moveChosen), map.chunks);
 				attacker.movesets.get(moveChosen).pp--;
 				displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, map.chunks);
 			}
@@ -378,15 +415,15 @@ public class Battle {
 		return 0;
 	}
 	
-	public void checkTimers(Poke p, Poke o, ArrayList<ArrayList<chunk>> chunks) {
+	public void checkTimers(Poke p, Poke o, ArrayList<ArrayList<chunk>> chunks,Effect effect) {
 		if(p.impacttimer != 0)p.impacttimer--;
 		if(p.impacttimer == 0) {
-			inflictImpact(p,o, chunks);
+			effect.inflictImpact(p,o, chunks);
 			p.impact = "";
 		}
 		if(p.statustimer != 0)p.statustimer--;
 		if(p.statustimer == 0) {
-			inflictStatus(p, chunks);
+			effect.inflictStatus(p, chunks);
 			p.status = "";
 		}
 		if(p.debufftimer != 0)p.debufftimer--;
@@ -394,7 +431,7 @@ public class Battle {
 			if(p.debuff.equals("Photosynthesis")) {
 				
 			} else {
-				inflictDebuff(p,o, chunks);
+				effect.inflictDebuff(p,o, chunks);
 			}
 			p.debuff = "";
 		}
@@ -449,255 +486,17 @@ public class Battle {
 		}
 		return strength;
 	}
-	public void inflictDamage(Poke attacker, Poke defender, int damage, ArrayList<ArrayList<chunk>> chunks, Poke user, Poke enemy) {
-		defender.temphp -= damage;
-		if(defender.temphp < 0) defender.temphp = 0;
-		printInformation(user, enemy,chunks);
-		mapDialogue(chunks,"It deals " + damage +" damage to " + defender.name + "'s hp!                                                                                  > continue                                    ");
-	}
-	
-	public void assignDebuff(Poke curr, Poke other, Attack move, ArrayList<ArrayList<chunk>> chunks) {
-		if(move.effect != "NONE") {
-			if(move.attackType.equals("Physical") && curr.impact.equals("")) {
-				if(move.effect.equals("Extra Turn")) {
-					other.impact = move.effect;
-					System.out.println(other.name + " has been assigned " + other.impact);
-				} else {
-					curr.impact = move.effect;
-					mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
-				}
-			} else if(move.attackType.equals("Special") && curr.debuff.equals("")) {
-				curr.debuff = move.effect;
-				mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
-			} else if(move.attackType.equals("Status") && curr.status.equals("")) {
-				curr.status = move.effect;
-				mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
-			} else {
-				return;
-			}
-			if(move.attackType.equals("Physical")) {
-				if(move.effect.equals("Extra Turn")) {
-					curr.impacttimer = 1;
-				} else {
-					Random ran = new Random();
-					curr.impacttimer = ran.nextInt(1,3);
-				}
-			} else if(move.attackType.equals("Special")) {
-				if(curr.debuff.equals("Drown") || curr.debuff.equals("Shock") || curr.debuff.equals("Photosynthesis") || curr.debuff.equals("Pollution")) {
-					curr.debufftimer = 3;
-				} else if(curr.debuff.equals("Burn") || curr.debuff.equals("Poison") || curr.debuff.equals("Mud") || curr.debuff.equals("Melting Point") || curr.debuff.equals("Malleable")) {
-					curr.debufftimer = 3;
-				}
-			} else if(move.attackType.equals("Status")) {
-				if(curr.status.equals("heal")) {
-					curr.statustimer = 1;
-				} else if(curr.status.equals("evade")) {
-					curr.statustimer = 2;
-				} else if(curr.status.equals("Thorns") || curr.status.equals("Blossom")) {
-					curr.statustimer = 3;
-				} else if(curr.status.equals("Rock Shield") || curr.status.equals("Ice Shield") || curr.status.equals("Reflect")) {
-					curr.statustimer = 4;
-				}
-			}
-		}
-	}
-
-	public  void inflictDebuff(Poke curr, Poke attacker, ArrayList<ArrayList<chunk>> chunks) {
-		if(!(curr.debuff.equals(""))) {
-			String key = "";
-			for(int i = 0; i < curr.debuff.length(); i++) {
-				if(curr.debuff.substring(i, i+1).equals(" ")) {
-					key += "_";
-				} else {
-					key += curr.debuff.substring(i, i+1);
-				}
-			}
-		    try {
-		            Method method = Battle.class.getMethod(key, Poke.class, ArrayList.class);
-		            method.invoke(this, curr, chunks);
-		            System.out.println("We found it ");
-			}catch(Exception e) {
-				System.out.println("Something failed...");
-				e.printStackTrace();
-				return;
-			}
-		}
-	}	
-	public void inflictImpact(Poke curr, Poke attacker, ArrayList<ArrayList<chunk>> chunks) {
-		if(!(curr.impact.equals(""))) {
-			String key = "";
-			for(int i = 0; i < curr.impact.length(); i++) {
-				if(curr.impact.substring(i, i+1).equals(" ")) {
-					key += "_";
-				} else {
-					key += curr.impact.substring(i, i+1);
-				}
-			}
-		    try {
-		    		key.trim();
-		            Method method = Battle.class.getMethod(key, Poke.class,  ArrayList.class);
-		            method.invoke(this, curr, chunks);
-			} catch(NoSuchMethodException e) {
-				try {
-					Method method = Battle.class.getMethod(key,  Poke.class, Poke.class,  ArrayList.class);
-					method.invoke(this, curr, attacker, chunks);
-				} catch(Exception d) {
-					System.out.println("Still could not find a method");
-				}
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	public void inflictStatus(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		if(!(curr.status.equals(""))) {
-			String key = "";
-			for(int i = 0; i < curr.status.length(); i++) {
-				if(curr.status.substring(i, i+1).equals(" ")) {
-					key += "_";
-				} else {
-					key += curr.status.substring(i, i+1);
-				}
-			}
-		    try {
-		    		key.trim();
-		            Method method = Battle.class.getMethod(key, Poke.class,  ArrayList.class);
-		            method.invoke(this, curr, chunks);
-			} catch(NoSuchMethodException e) {
-				//type methods that have multiple parameters (it shouldnt?)
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public void Burn(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//inflicts 10% dps
-		double dmg = curr.hp * .10;
-		curr.temphp -= (int)dmg;
-		mapDialogue(chunks, curr.name + " has been hit with " + (int)dmg + " burn damage!                                                                                                               > continue                                                      ");
-		if(curr.temphp < 0) curr.temphp = 0;
-	}
-	public void Poison(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//inflicts 15% dps
-		double dmg = curr.temphp * .15;
-		curr.temphp -= (int)dmg;
-		mapDialogue(chunks, curr.name + " has been hit with " + (int)dmg + " poison damage!                                                                                                             > continue                                                     ");
-		if(curr.temphp < 0) curr.temphp = 0;
-	}
-	public void Drown(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//inflict 5% dps
-		double dmg = curr.temphp * .05;
-		curr.temphp -= (int)dmg;
-		mapDialogue(chunks, curr.name + " has been hit with " + (int)dmg + " drown damage!                                                                                                              > continue                                                     ");
-		if(curr.temphp < 0) curr.temphp = 0;
-	}
-	public void Heal(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//heals the pokemon by 50% of its hp
-		double healing = curr.temphp * .5;
-		curr.temphp += (int)healing;
-		mapDialogue(chunks, curr.name + " has been healed by " + (int)healing + " points!                                                                                                               > continue                                                     ");
-		if(curr.temphp > curr.hp) curr.temphp = curr.hp;
-	}
-	public void Evade(Poke curr, Map map) {
-		//provides current pokemon the ability to dodge every turn until its gone
-	}
-	public void Mud(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//causes current pokemon to lose control of what move they use, reduces POW of move by 15%, and removes the debuff if special
-	}
-	public void Rock_Shield(Poke curr,ArrayList<ArrayList<chunk>> chunks) {
-		//provides current pokemon a 50% shield
-	}
-	public void Ice_Shield(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//provides current pokemon a 20% shield and resistance to burning and poison
-		if(curr.statustimer == 0) {
-
-		}
-	}
-	public void Shock(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//slows the current pokemon down and 25% chance to miss a move
-		curr.tempstats[0] = curr.speed  - (int)(curr.speed * .40);
-		curr.tempstats[1] = curr.attack - (int)(curr.attack * .05);
-		double dmg = curr.hp * .05;
-		curr.temphp -= (int)dmg;
-		mapDialogue(chunks, curr.name + " has been hit with " + (int)dmg + " static damage!                                                                                                             > continue                                                     ");
-		if(curr.debufftimer == 0) {
-			curr.tempstats[0] = curr.speed;
-			curr.tempstats[1] = curr.attack;
-		}
-		if(curr.temphp > curr.hp) curr.temphp = curr.hp;
-	}
-	public void Haste(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//should increase move accuracy, reduce damage taken, increase chance to dodge attack by a significant amount
-		curr.tempstats[0] = (int)(curr.speed * 0.3) + curr.speed;
-		if(curr.statustimer == 0) {
-			curr.tempstats[0] = curr.speed;
-		}
-	}
-	public void Reflect(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//reflects 40% of damage taken back onto enemy and reduces damage taken by 20%
-		if(curr.statustimer == 0) {
-		
-		}
-	}
-	public void Extra_Turn(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//provides pokemon an extra turn after performing their turn in battle
-	}
-	public void Photosynthesis(Poke curr, Poke Attacker, ArrayList<ArrayList<chunk>> chunks, Random ran) {
-		//provides the current pokemon 
-		double dmg = (int)(curr.hp * .1);
-		Attacker.temphp += (int)dmg;
-		curr.temphp -= (int)dmg;
-		mapDialogue(chunks, Attacker.name + " syphens " + (int)dmg +" hp from " + curr.name + "                                                                                                           > continue                                                     ");
-		if(Attacker.temphp > Attacker.hp) Attacker.temphp = Attacker.hp;
-		if(curr.temphp < 0) curr.temphp = 0;
-	}
-	public void Thorns(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//thorn status effect grants current pokemon chance to damage enemy pokemon whenever it attacks it and a low chance to inflict poison
-	}
-	public void Paralyze(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//prevents current pokemon from using its turn in battle temporarily
-	}
-	public void Confuse(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//causes current pokemon to have a chance at attacking itself or teamates
-	}
-	public void Daze(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//lowers the accuracy of current pokemon by 35%
-		curr.tempstats[0] = curr.speed - (int)( curr.speed * .20);
-		if(curr.impacttimer == 0) {
-			curr.tempstats[0] = curr.speed;
-		}
-	}
-	public void MeltingPoint(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//lowers all stats of the current pokemon by 5% overtime
-		for(int i = 0; i < 5; i++) {
-			double stat = curr.tempstats[i] * .05;
-			curr.tempstats[i] -= (int)stat;
-		}
-		if(curr.debufftimer == 0) {
-			curr.tempstats[0] = curr.speed;curr.tempstats[1] = curr.attack; curr.tempstats[2] = curr.spAttack;
-			curr.tempstats[3] = curr.defense;curr.tempstats[4] = curr.spDefense;
-		}
-	}
-	public void Malleable(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//lowers defense and special defense of pokemon by 20%
-		curr.tempstats[3] = curr.defense - (int)(curr.defense * .20);
-		curr.tempstats[4] = curr.spDefense - (int)(curr.spDefense * .20);
-		if(curr.debufftimer == 0) {
-			curr.tempstats[3] = curr.defense;
-			curr.tempstats[4] = curr.spDefense;
-		}
-	}
-	public void Pollution(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//will deal 5% damage to current pokemon team each time current pokemon is damaged in battle
-	}
-	public void Blossom(Poke curr, ArrayList<ArrayList<chunk>> chunks) {
-		//provide current pokemon a 2x multiplier to their attack and special attack stat
-		curr.tempstats[1] = curr.attack * 2;
-		curr.tempstats[2] = curr.spAttack * 2;
-		if(curr.statustimer == 0) {
-			curr.tempstats[1] = curr.attack;
-			curr.tempstats[2] = curr.spAttack;
+	public void inflictDamage(Poke attacker, Poke defender, int damage, Effect effect, ArrayList<ArrayList<chunk>> chunks, Poke user, Poke enemy) {
+		if(defender.status.equals("Reflect")) {
+			effect.Reflect(defender, attacker, damage, chunks);
+			mapDialogue(chunks, defender.name + " reflects the move onto " + attacker.name + "!                                                                               > continue                                           ");
+			mapDialogue(chunks,"It deals " + damage +" damage to " + attacker.name + "'s hp!                                                                                  > continue                                    ");
+		} else {
+			defender.temphp -= damage;
+			if(defender.status.equals("Thorns")) effect.Thorns(enemy, chunks);
+			if(defender.temphp < 0) defender.temphp = 0;
+			printInformation(user, enemy,chunks);
+			mapDialogue(chunks,"It deals " + damage +" damage to " + defender.name + "'s hp!                                                                                  > continue                                    ");
 		}
 	}
 	
@@ -1027,7 +826,6 @@ public class Battle {
 	
 	public int capturePokemon(Poke victim, ArrayList<ArrayList<chunk>> chunks, Ball item, Player user) {
 		double chance = (((3*victim.hp - (2 * victim.temphp))%(3*victim.hp)) * item.accuracy);
-		System.out.println(chance);
 		Random ran = new Random();
 		if(ran.nextInt(1, 255) <= chance) {
 			//initiate capture script
@@ -1171,7 +969,6 @@ public class Battle {
 					StringBuilder sb2 = new StringBuilder(curr.model[i].substring(18,36));
 					chunks.get(row+1).get(col).grid[i-5] = sb1.toString();
 					chunks.get(row+1).get(col+1).grid[i-5] = sb2.toString();
-					System.out.println(enemy.model[i]);
 					StringBuilder sb3 = new StringBuilder(enemy.model[i].substring(0,18));
 					StringBuilder sb4 = new StringBuilder(enemy.model[i].substring(18,36));
 					chunks.get(row+1).get(col+5).grid[i-5] = sb3.toString();
@@ -1247,7 +1044,7 @@ public class Battle {
 	}
 	
 		
-	public void printMethod(ArrayList<ArrayList<chunk>> chunks) {
+	public static void printMethod(ArrayList<ArrayList<chunk>> chunks) {
 		game.spaces();
 		System.out.println("_".repeat(200));
 		for(int j = 0; j < 8; j++) {
@@ -1263,7 +1060,7 @@ public class Battle {
 			}
 		}
 	}
-	public void mapDialogue(ArrayList<ArrayList<chunk>> chunks,String sentence) {
+	public static void mapDialogue(ArrayList<ArrayList<chunk>> chunks,String sentence) {
 		// 3, 4, 5, 6, 7, 8
 		chunks.get(5).get(2).grid[0] = " ~~~~~~~~~~~~~~~~~";
 		chunks.get(5).get(2).grid[1] = "|                 ";
