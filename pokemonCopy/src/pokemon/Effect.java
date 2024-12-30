@@ -22,54 +22,27 @@ public class Effect {
 		if(move.effect != "") {
 			if(!((move.effect.equals("Daze") || move.effect.equals("Confuse")) && curr.status.equals("Echolocation"))){
 				if(move.attackType.equals("Physical") && curr.impact.equals("")) {
-					if(move.effect.equals("Extra Turn")) {
-						other.impact = move.effect;
-						System.out.println(other.name + " has been assigned " + other.impact);
-					} else {
-						curr.impact = move.effect;
+					if(move.effect.equals("Extra Turn") || (move.effect.equals("Evade")) && other.impactcooldown == 0) {
+						other.impact = move.effect; other.impacttimer = move.timer;
+						Battle.mapDialogue(chunks,other.name + " has been assigned " + other.debuff +"                                                                            ");
+					} else if(curr.impact.equals("") && curr.impactcooldown == 0) {
+						curr.impact = move.effect; curr.impacttimer = move.timer;
 						Battle.mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
 					}
 				} else if(move.attackType.equals("Special") && curr.debuff.equals("")) {
-					curr.debuff = move.effect;
-					Battle.mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
-				} else if(move.attackType.equals("Status") && curr.status.equals("")) {
-					curr.status = move.effect;
+					if(move.effect.equals("Camoflauge")  && other.debuffcooldown == 0) {
+						other.debuff = move.effect;other.debufftimer = move.timer;
+						Battle.mapDialogue(chunks,other.name + " has been assigned " + other.debuff +"                                                                            ");
+					} else if(curr.debuff.equals("")  && curr.debuffcooldown == 0){
+						curr.debuff = move.effect; curr.debufftimer = move.timer;
+						Battle.mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
+					}
+				} else if(move.attackType.equals("Status") && curr.status.equals("") && curr.statuscooldown == 0) {
+					curr.status = move.effect; curr.statustimer = move.timer;
 					Battle.mapDialogue(chunks, curr.name + " has been inflicted with " + move.effect.toLowerCase() + "                                                                                               > continue                                                                    ");
 				} else {
 					return;
 				}
-				if(move.attackType.equals("Physical")) {
-					curr.impacttimer = move.timer;
-				} else if(move.attackType.equals("Special")) {
-					curr.debufftimer = move.timer;
-				} else if(move.attackType.equals("Status")) {
-					curr.statustimer = move.timer;
-				}
-				
-//				if(move.attackType.equals("Physical")) {
-//					if(move.effect.equals("Extra Turn")) {
-//						curr.impacttimer = 1;
-//					} else {
-//						Random ran = new Random();
-//						curr.impacttimer = ran.nextInt(1,3);
-//					}
-//				} else if(move.attackType.equals("Special")) {
-//					if(curr.debuff.equals("Drown") || curr.debuff.equals("Shock") || curr.debuff.equals("Photosynthesis") || curr.debuff.equals("Pollution")) {
-//						curr.debufftimer = 3;
-//					} else if(curr.debuff.equals("Burn") || curr.debuff.equals("Poison") || curr.debuff.equals("Mud") || curr.debuff.equals("Melting Point") || curr.debuff.equals("Malleable")) {
-//						curr.debufftimer = 3;
-//					}
-//				} else if(move.attackType.equals("Status")) {
-//					if(curr.status.equals("heal")) {
-//						curr.statustimer = 1;
-//					} else if(curr.status.equals("evade")) {
-//						curr.statustimer = 2;
-//					} else if(curr.status.equals("Thorns") || curr.status.equals("Blossom")) {
-//						curr.statustimer = 3;
-//					} else if(curr.status.equals("Rock Shield") || curr.status.equals("Ice Shield") || curr.status.equals("Reflect")) {
-//						curr.statustimer = 4;
-//					}
-//				}
 			}
 		}
 	}
@@ -319,6 +292,7 @@ public class Effect {
 			curr.tempstats[4] = curr.spDefense;
 		}
 	}
+	
 
 	
 	

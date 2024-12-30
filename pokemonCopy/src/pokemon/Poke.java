@@ -8,6 +8,7 @@ import pokemon.Item;
 import pokemon.Map.chunk;
 import java.util.Random;
 import pokemon.Backpack;
+import pokemon.Battle;
 
 public class Poke {
 	int level; int xp;
@@ -24,9 +25,10 @@ public class Poke {
 	int tempstats[];
 	int percent;
 	int shield;
+	int availablepos = 0;
 	ArrayList<Attack> movesets;
+	ArrayList<Attack> available;
 	String[] model;
-	
 	int EV[];
 	int IV[];
 	Item itemHeld;
@@ -34,13 +36,14 @@ public class Poke {
 	String impact;
 	String debuff;
 	String status;
-	int impacttimer, debufftimer, statustimer;
+	int impacttimer =0, debufftimer =0, statustimer =0, impactcooldown =0, debuffcooldown =0, statuscooldown = 0;
 	Poke(String name, Collection collection, int level){
 		model = new String[10];
 		for(int i = 0; i < 10; i++) {
 			model[i] = collection.get(name).model[i];
 		}
 		movesets = new ArrayList<>();
+		available = new ArrayList<>();
 		this.level = level; this.xp = 0;
 		movesets.add(collection.get(name).moves.get(0));
 		movesets.add(collection.get(name).moves.get(1));
@@ -90,18 +93,74 @@ public class Poke {
 		}
 	}
 	
-	public void updateStats(Collection collection) {
+	public void updateStats(Collection collection, ArrayList<ArrayList<chunk>> chunks) {
 		this.hp = ((((2 * collection.get(name).bhp + IV[0] + (EV[0]/4))/100)*level) + level + 10 ) * 2;
 		this.attack = (((2 * collection.get(name).battack + IV[1] + (EV[1]/4))/100)*level) + 5;
 		this.spAttack = (((2 * collection.get(name).bspattack + IV[2] + (EV[2]/4))/100)*level) + 5;
 		this.defense = (((2 * collection.get(name).bdefense + IV[3] + (EV[3]/4))/100)*level) + 5;
 		this.spDefense = (((2 * collection.get(name).bspdefense + IV[4] + (EV[4]/4))/100)*level) + 5;
 		this.speed = (((2 * collection.get(name).bspeed + IV[5] + (EV[5]/4))/100)*level) + 5;
+		
+		if(level == 7) {
+			movesets.add(collection.get(name).moves.get(2));
+			Battle.mapDialogue(chunks, name + " has learned " + movesets.get(2).name + "?                                                                  ");
+		}
+		if(level == 10) {
+			movesets.add(collection.get(name).moves.get(3));
+			Battle.mapDialogue(chunks, name + " has learned " + movesets.get(3).name + "?                                                                     ");
+		}
+		if(15 <= level) {
+			int temp = 10;
+			if(level == 15) {
+				temp = 5;
+			} else if(level == 20) {
+				temp = 6;
+			} else if(level == 25 || level == 30) {
+				temp = availablepos;
+			} else if(level == 35 && collection.get(name).moves.get(7) != null) {
+				temp = 7;
+			} else if(level == 40 && collection.get(name).moves.get(8) != null) {
+				temp = 8;
+			} else if(level % 5 == 0){
+				while(true) {	
+					Random ran = new Random();
+					temp = ran.nextInt(0,4);
+					if(collection.get(name).moves.get(temp) != null)break;
+				}
+			}
+			
+			
+			if(temp != 10) {
+				while(true) {
+					int a = Battle.mapQuestion(chunks, "Should " + name + " learn " + collection.get(name).moves.get(temp).name + "?                                                               ");
+					if(a == 0) {
+						available.add(collection.get(name).moves.get(temp));
+					}
+					int chosen = Player.swapMove(collection, chunks, Poke.this);
+					
+					if(chosen != 5) {
+						if(temp != 0 && temp != 1) {
+							available.add(collection.get(name).moves.get(chosen));
+							movesets.remove(collection.get(name).moves.get(chosen));
+							movesets.add(collection.get(name).moves.get(temp));
+						} else {
+							available.add(collection.get(name).moves.get(chosen));
+							movesets.remove(collection.get(name).moves.get(chosen));
+							movesets.add(available.get(temp));
+							available.remove(temp);
+							availablepos++;
+						}
+						return;
+					}
+				}
+			}
+			
+		}
 	}
-	public int checkLevel(Collection collection) {
+	public int checkLevel(Collection collection, ArrayList<ArrayList<chunk>> chunks) {
 		if(xp >= (20 + ((level-5) *5))) {
-			updateStats(collection);
 			if(level != 100)level++;
+			updateStats(collection, chunks);
 			xp = xp - (20+((level-5)*5));
 			temphp = hp;
 			return 1;
@@ -117,6 +176,7 @@ class Attack{
 	String effect;
 	int power;
 	String attackType;
+	String description;
 	int pp;
 	int timer;
 	Attack() {
@@ -180,24 +240,42 @@ class AttackDatabase{
 		
 		//physical grass moves
 		addMove("Physical", "Leaf Kick", "Grass", 80, "", 30, 0, 30, 0);
+		physicalMoves.get("Leaf Kick").description = "   Grass move with a minor kick to it!                                     ";
 		addMove("Physical", "Stick Puncture", "Grass", 80, "", 50, 0, 30, 0);
+		physicalMoves.get("Stick Puncture").description = "   Impales the opponent with a stick!                                     ";
 		addMove("Physical", "Dirty Hook", "Grass", 80, "Daze", 40, 0, 20, 2);
+		physicalMoves.get("Dirty Hook").description = "   Hit them with a punch, leave them dazed!                                     ";
 		addMove("Physical", "Dirty Slap", "Grass", 80, "", 50, 0, 30, 0);
+		physicalMoves.get("Dirty Slap").description = "   Slap them back to reality.                                     ";
 		addMove("Physical", "Lawn Mower", "Grass", 80, "", 80, 0, 20, 0);
+		physicalMoves.get("Lawn Mower").description = "   Slices the opponent with razor sharp grass!                                      ";
 		addMove("Physical", "Weed Wacker", "Grass", 80, "", 75, 0, 20, 0);
+		physicalMoves.get("Weed Wacker").description = "   Slices the opponent with sharp grass!                                     ";
 		addMove("Physical", "Tangled Vines", "Grass", 80, "Paralyze", 0, 0, 20, 2);
+		physicalMoves.get("Tangled Vines").description = "   Traps the opponent in vines, paralyzing them.                                     ";
 		addMove("Physical", "Flora Wallop", "Grass", 80, "Daze", 70, 0, 20, 2);
+		physicalMoves.get("Flora Wallop").description = "   Powerful punch inflicting daze!                                     ";
 		addMove("Physical", "Forest Junction", "Grass", 80, "Paralyze", 120, 0 ,10, 2);
+		physicalMoves.get("Forest Junction").description = "   Send a volley of tree branches and paralyze the enemy!                                     ";
 		addMove("Physical", "Hack-a-Tree", "Grass", 80, "", 150, 0, 10, 0);
+		physicalMoves.get("Hack-a-Tree").description = "   Punch powerful enough to decimate an entire tree!                                     ";
 		//special grass moves
 		addMove("Special", "Shallow Grass Cut", "Grass", 70, "Bleed", 40, 0, 20, 3);
+		specialMoves.get("Shallow Grass Cut").description = "   Minor cut, but enough to bleed!                                     ";
 		addMove("Special", "Branch Throw", "Grass", 80, "", 50, 0, 30, 0);
+		specialMoves.get("Branch Throw").description = "   Never underestimate the power of a stick! -Stickly                                     ";
 		addMove("Special", "Dirty Shot", "Grass", 60, "Photosynthesis", 60, 0, 20, 2);
+		specialMoves.get("Dirty Shot").description = "   Throw some dirt in their eyes, inflic photosynthesis.                                     ";
 		addMove("Special", "Leaf Blow", "Grass", 80, "", 50, 0, 30, 0);
-		addMove("Special", "Vine Lash", "Grass", 70, "Bleed", 80, 0, 10, 3);
-		addMove("Special", "Herb Clash", "Grass", 80, "", 75, 0, 20, 0);
-		addMove("Special", "HayMaker", "Grass", 80, "", 90, 0, 20, 0);
+		specialMoves.get("Leaf Blow").description = "                                        ";
+		addMove("Special", "Vine Lash", "Grass", 70, "Bleed", 60, 0, 10, 3);
+		specialMoves.get("Vine Lash").description = "   Summon multiple vines to bleed the enemy!                                     ";
+		addMove("Special", "Herb Clash", "Grass", 80, "", 65, 0, 20, 0);
+		specialMoves.get("Herb Clash").description = "   Throw a powerful bunch of herbs to do heavy damage!                                     ";
+		addMove("Special", "HayMaker", "Grass", 80, "", 80, 0, 20, 0);
+		specialMoves.get("HayMaker").description = "   Summon hundreds of hay needles below the opponent!                                     ";
 		addMove("Special", "Weeping Willow", "Grass", 80, "", 70, 0, 20, 0);
+		specialMoves.get("Weeping Willow").description = "                                     ";
 		addMove("Special", "Jungle Junction", "Grass", 70, "Photosynthesis", 120, 0, 10, 1);
 		addMove("Special", "Uprooted", "Grass", 100, "", 150, 0, 10, 0);
 		//status grass moves (temp)
@@ -211,26 +289,33 @@ class AttackDatabase{
 		
 		//physical Fire moves
 		addMove("Physical", "Flame Kick", "Fire", 80, "", 40, 0, 30, 0);
-		addMove("Physical", "Searing Punch", "Fire", 80, "", 30, 0, 30, 0);
+		addMove("Physical", "Tail Whip", "Fire", 80, "", 40, 0, 30, 0);
+		addMove("Physical", "Searing Punch", "Fire", 80, "Daze", 30, 0, 30, 0);
 		addMove("Physical", "Light Flicker", "Fire", 80, "", 30, 0, 30, 0);
 		addMove("Physical", "Bonfire Rush", "Fire", 80, "", 50, 0, 30, 0);
 		addMove("Physical", "Fiery Uppercut", "Fire", 80, "", 70, 0, 20, 0);
-		addMove("Physical", "Enflamed Glove", "Fire", 80, "", 75, 0, 20, 0);
+		addMove("Physical", "Inflamed Glove", "Fire", 80, "", 75, 0, 20, 0);
 		addMove("Physical", "1000 Deg Blaze", "Fire", 80, "Daze", 60, 0, 20, 3);
 		addMove("Physical", "Smoldering Entombment", "Fire", 80, "", 90, 0, 20, 0);
 		addMove("Physical", "MALEVOLENT KITCHEN", "Fire", 110, "Extra Turn", 0, 0, 10, 1);
 		addMove("Physical", "ASHES OF POMPEII", "Fire", 100, "Confuse", 0, 0, 10, 2);
+		
+		
 		//special fire moves
 		addMove("Special", "Fire Dart", "Fire", 60, "", 40, 0, 30, 0);
+		addMove("Special", "Hide n Lizard", "Fire", 80, "Camoflauge", 20, 0, 30, 2);
 		addMove("Special", "Boulder of Ash", "Fire", 60, "", 50, 0, 30, 0);
 		addMove("Special", "Flame Ignition", "Fire", 80, "Burn", 30, 0, 20, 3);
 		addMove("Special", "Flame Pebbles", "Fire", 80, "", 40, 0, 30, 0);
 		addMove("Special", "Meteor Shower", "Fire", 60, "Burn", 80, 0, 20, 3);
+		addMove("Special", "Flaming Tongue", "Fire", 60, "Burn", 80, 0, 20, 3);
 		addMove("Special", "Swelling Inferno", "Fire", 70, "Melting Point", 40, 0, 20, 3);
 		addMove("Special", "Hot Cross Buns", "Fire", 100, "", 90, 0, 20, 0);
 		addMove("Special", "Volcanic Disruption", "Fire", 100, "", 100, 0, 20, 0);
 		addMove("Special", "Magma Bound", "Fire", 100, "Melting Point", 140, 0, 10, 3);
 		addMove("Special", "Lava Flood", "Fire", 100, "Burn", 130, 0, 10, 3);
+		
+		addMove("Special", "", "Fire", 0, "", 0, 0, 0, 0);
 		
 		//status fire moves
 		addMove("Status", "Rising Phoenix", "Fire", 100, "Heal", 0, 0, 5, 1);
@@ -319,7 +404,13 @@ class AttackDatabase{
 		addMove("Status", "Twisted Thicket", "Poison", 100, "Thorns", 0, 0, 5, 3);
 		
 		
+		//birds
+		addMove("Status", "Take Flight", "INSERT", 0, "Evade", 0, 0, 5, 2);
 		
+		
+		//lizrds / dinosaurs
+		addMove("Status", "Molt", "INSERT", 0, "Heal", 0, 0, 5, 1);
+
 		
 	}
 	

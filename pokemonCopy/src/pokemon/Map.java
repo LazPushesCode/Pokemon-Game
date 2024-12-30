@@ -8,6 +8,7 @@ import pokemon.game;
 import pokemon.ItemShopDatabase;
 import pokemon.Item;
 import pokemon.Puzzle;
+import pokemon.PC;
 
 public class Map {
 	static int userrow;
@@ -139,7 +140,7 @@ public class Map {
 	}
 	
 	//process the user's input to move the character or do actions
-	public void takeInput(String input, Player user, String area, ItemShopDatabase items, Map map, GrassPuzzle grasspuzzle) {
+	public void takeInput(String input, Player user, String area, ItemShopDatabase items, Map map, GrassPuzzle grasspuzzle, PC pc) {
 		prevrow = userrow;
 		prevcol = usercol;
 		if(input.equals("a")) {
@@ -229,8 +230,12 @@ public class Map {
 				return;
 			}
 			if(chunks.get(userrow).get(usercol).interactable == 1) {
-				if((mapGen.equals("PokeStop1") || mapGen.equals("PokeStop2") || mapGen.equals("PokeStop3") )&& userrow == 3 && usercol == 5)  {
-					items.pokeStopMenu(user, area, items, chunks, map);
+				if((mapGen.equals("PokeStop1") || mapGen.equals("PokeStop2") || mapGen.equals("PokeStop3") ))  {
+					if(userrow == 3 && usercol == 5) {
+						items.pokeStopMenu(user, area, items, chunks, map);
+					} else if(userrow == 4 && usercol == 9 && !user.pokedex.isEmpty()) {
+						pc.displayPC(user, chunks);
+					}
 				}
 				if(mapGen.equals("House") && ((userrow == 2 && usercol == 1) || (userrow == 2 && usercol == 2))){
 					user.customize();
@@ -672,7 +677,18 @@ public class chunk{
 		up = 0;down = 0;left = 0;right = 0;enterable = 0;interactable = 1;generation = 0;
 		this.row = row; this.col = col;
 	}	
-}
+	public void blankify() {
+		grid[0] = "                  ";
+		grid[1] = "                  ";
+		grid[2] = "                  ";
+		grid[3] = "                  ";
+		grid[4] = "                  ";
+	}
+	public void increaseSpace(int i, int index) {
+		if(i >= grid[index].length()) grid[index] += " ";
+	}
+}	
+
 //replace: 7 8 9 10
 public chunk modifyChunk(chunk c, Player user, String area, int chunkNum){
 	chunk temp = new chunk();

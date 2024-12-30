@@ -14,6 +14,7 @@ import pokemon.Puzzle;
 import java.util.HashMap;
 import pokemon.Battle;
 import pokemon.Item;
+import pokemon.PC;
 import java.util.function.Function;
 
 class game {
@@ -28,7 +29,9 @@ class game {
 		ItemShopDatabase itemshop = new ItemShopDatabase();
 		AttackDatabase attackLib = new AttackDatabase();
 		Collection collection = new Collection(attackLib);
-		Generate gen = new Generate(collection);
+		Generate gen = new Generate(collection);		
+		PC pc = new PC();
+		
 		Tutorial.tutorial(user, map, collection);
 		
 		String currMap;
@@ -46,6 +49,10 @@ class game {
 		spaces();
 		//load chunks -> print map -> take input -> repeat
 		int randomValue;
+//		
+//		Poke test = new Poke("Aqualard", collection, 5);
+//		simulation.OverviewBattleWild(user, test, map.chunks, map);
+		
 		while(user.execute == 0) {
 			spaces();
 			currMap = Map.mapGen;
@@ -74,10 +81,10 @@ class game {
 					}
 				}
 				if(Player.encountercooldown != 0) Player.encountercooldown--;
-
+				
 			//handles the input provided by user, which is processed and influences the chunks and printing of the map (takeInput leads to backbone of game)
 			input = scan.next();
-			map.takeInput(input, user, currMap, itemshop, map, grasspuzzle);
+			map.takeInput(input, user, currMap, itemshop, map, grasspuzzle, pc);
 			
 		}
 		scan.close();
@@ -132,17 +139,14 @@ class Tutorial{
 				if(pos == 0) {
 					//hp, attack, sp.attack, defense, sp.defense, speed;
 					Poke fizard = new Poke("Fizard", collection, 5);
-					user.addToPokeDex(fizard);
 					user.addPokemonToRoster(fizard);
 					System.out.println("Fizard has been added to your party!");
 				} else if(pos == 1) {
 					Poke aqualard = new Poke("Aqualard", collection, 5);
-					user.addToPokeDex(aqualard);
 					user.addPokemonToRoster(aqualard);
 					System.out.println("Aqualard has been added to your party!");
 				} else if(pos == 2) {
 					Poke leaflet = new Poke("TreeKat", collection, 15);
-					user.addToPokeDex(leaflet);
 					user.addPokemonToRoster(leaflet);
 					System.out.println("TreeKat has been added to your party!");
 				}

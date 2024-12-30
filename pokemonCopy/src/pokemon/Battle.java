@@ -55,8 +55,23 @@ public class Battle {
 	public void OverviewBattleWild(Player user, Poke wildpoke, ArrayList<ArrayList<chunk>> chunks, Map map) {
 		int userchoice = 0;
 		ArrayList<Poke> involvedPokemon = new ArrayList<>();
+		
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 11; j++) {
+				chunks.get(i).get(j).blankify();
+			}
+		}
+		chunks.get(4).get(0).grid[4]="__________________";chunks.get(4).get(1).grid[4]="__________________";chunks.get(4).get(2).grid[4] ="__________________";chunks.get(4).get(3).grid[4] ="__________________";chunks.get(4).get(4).grid[4] ="__________________";chunks.get(4).get(5).grid[4] ="__________________";chunks.get(4).get(6).grid[4] ="__________________";chunks.get(4).get(7).grid[4] ="__________________";chunks.get(4).get(8).grid[4] ="__________________";chunks.get(4).get(9).grid[4] ="__________________";chunks.get(4).get(10).grid[4] ="__________________";
+		displayPokemon(wildpoke, chunks);
+		mapDialogue(chunks, "A wild " + wildpoke.name + " appears!                                                ");
 		while(true) {
-			userchoice = choosePokemon(user, wildpoke, chunks, map);
+			while(true) {
+				userchoice = choosePokemon(user, wildpoke, chunks, map);
+				try {
+					user.rosterlist.get(userchoice);
+					break;
+				} catch(Exception e) {}
+			}
 			if(!involvedPokemon.contains(user.rosterlist.get(userchoice))) involvedPokemon.add(user.rosterlist.get(userchoice));
 			if(Player.numRoster > userchoice) {
 				break;
@@ -74,7 +89,15 @@ public class Battle {
 					mapDialogue(chunks, "All of your pokemon have been defeated... The area is far too dangerous to stay.                                               ");
 					break;
 				}
-				userchoice = choosePokemon(user,wildpoke,chunks, map);
+				while(true) {
+					userchoice = choosePokemon(user,wildpoke,chunks, map);
+					try {
+						user.rosterlist.get(userchoice);
+						break;
+					} catch(Exception e) {
+						
+					}
+				}
 			}
 			
 			result = simulateBattle(user,wildpoke,chunks,userchoice, 1, map);
@@ -85,7 +108,10 @@ public class Battle {
 				//player won
 				Player.encountercooldown = 5;
 				mapDialogue(chunks, "You've successfully beaten the wild pokemon!                                           ");
-				distributeXP(user, involvedPokemon, wildpoke, map);
+				int num = distributeXP(user, involvedPokemon, wildpoke, map);
+				Player.gold += num*3;
+				mapDialogue(chunks, "You've been awarded "+num*3+" gold!                                                  ");
+				
 			} else if(result == 1) {
 				//pokemon won
 				user.numDead++;
@@ -94,7 +120,7 @@ public class Battle {
 		
 	}
 	
-	public void distributeXP(Player user, ArrayList<Poke> list, Poke enemy, Map map) {
+	public int distributeXP(Player user, ArrayList<Poke> list, Poke enemy, Map map) {
 		int temp = 0;
 		if(enemy.percent == 1) {
 			temp = 1;
@@ -107,58 +133,17 @@ public class Battle {
 			list.get(i).xp += exp;
 			mapDialogue(map.chunks, list.get(i).name + " has obtained " + exp + " experience!                                            ");
 		}		
+		return exp;
 	}
 	
 	
 	public int choosePokemon(Player user, Poke enemy, ArrayList<ArrayList<chunk>> chunks, Map map) {
-		chunks.get(0).get(0).grid[0]="                  ";chunks.get(0).get(1).grid[0]="                  ";chunks.get(0).get(2).grid[0] ="                  ";chunks.get(0).get(3).grid[0] ="                  ";chunks.get(0).get(4).grid[0] ="                  ";chunks.get(0).get(5).grid[0] ="                  ";chunks.get(0).get(6).grid[0] ="                  ";chunks.get(0).get(7).grid[0] ="                  ";chunks.get(0).get(8).grid[0] ="                  ";chunks.get(0).get(9).grid[0] ="                  ";chunks.get(0).get(10).grid[0] ="                  ";
-		chunks.get(0).get(0).grid[1]="                  ";chunks.get(0).get(1).grid[1]="                  ";chunks.get(0).get(2).grid[1] ="                  ";chunks.get(0).get(3).grid[1] ="                  ";chunks.get(0).get(4).grid[1] ="                  ";chunks.get(0).get(5).grid[1] ="                  ";chunks.get(0).get(6).grid[1] ="                  ";chunks.get(0).get(7).grid[1] ="                  ";chunks.get(0).get(8).grid[1] ="                  ";chunks.get(0).get(9).grid[1] ="                  ";chunks.get(0).get(10).grid[1] ="                  ";
-		chunks.get(0).get(0).grid[2]="                  ";chunks.get(0).get(1).grid[2]="                  ";chunks.get(0).get(2).grid[2] ="                  ";chunks.get(0).get(3).grid[2] ="                  ";chunks.get(0).get(4).grid[2] ="                  ";chunks.get(0).get(5).grid[2] ="                  ";chunks.get(0).get(6).grid[2] ="                  ";chunks.get(0).get(7).grid[2] ="                  ";chunks.get(0).get(8).grid[2] ="                  ";chunks.get(0).get(9).grid[2] ="                  ";chunks.get(0).get(10).grid[2] ="                  ";
-		chunks.get(0).get(0).grid[3]="                  ";chunks.get(0).get(1).grid[3]="                  ";chunks.get(0).get(2).grid[3] ="                  ";chunks.get(0).get(3).grid[3] ="                  ";chunks.get(0).get(4).grid[3] ="                  ";chunks.get(0).get(5).grid[3] ="                  ";chunks.get(0).get(6).grid[3] ="                  ";chunks.get(0).get(7).grid[3] ="                  ";chunks.get(0).get(8).grid[3] ="                  ";chunks.get(0).get(9).grid[3] ="                  ";chunks.get(0).get(10).grid[3] ="                  ";
-		chunks.get(0).get(0).grid[4]="                  ";chunks.get(0).get(1).grid[4]="                  ";chunks.get(0).get(2).grid[4] ="                  ";chunks.get(0).get(3).grid[4] ="                  ";chunks.get(0).get(4).grid[4] ="                  ";chunks.get(0).get(5).grid[4] ="                  ";chunks.get(0).get(6).grid[4] ="                  ";chunks.get(0).get(7).grid[4] ="                  ";chunks.get(0).get(8).grid[4] ="                  ";chunks.get(0).get(9).grid[4] ="                  ";chunks.get(0).get(10).grid[4] ="                  ";
-		
-		chunks.get(1).get(0).grid[0]="                  ";chunks.get(1).get(1).grid[0]="                  ";chunks.get(1).get(2).grid[0] ="                  ";chunks.get(1).get(3).grid[0] ="                  ";chunks.get(1).get(4).grid[0] ="                  ";chunks.get(1).get(5).grid[0] ="                  ";chunks.get(1).get(6).grid[0] ="                  ";chunks.get(1).get(7).grid[0] ="                  ";chunks.get(1).get(8).grid[0] ="                  ";chunks.get(1).get(9).grid[0] ="                  ";chunks.get(1).get(10).grid[0] ="                  ";
-		chunks.get(1).get(0).grid[1]="                  ";chunks.get(1).get(1).grid[1]="                  ";chunks.get(1).get(2).grid[1] ="                  ";chunks.get(1).get(3).grid[1] ="                  ";chunks.get(1).get(4).grid[1] ="                  ";chunks.get(1).get(5).grid[1] ="                  ";chunks.get(1).get(6).grid[1] ="                  ";chunks.get(1).get(7).grid[1] ="                  ";chunks.get(1).get(8).grid[1] ="                  ";chunks.get(1).get(9).grid[1] ="                  ";chunks.get(1).get(10).grid[1] ="                  ";
-		chunks.get(1).get(0).grid[2]="                  ";chunks.get(1).get(1).grid[2]="                  ";chunks.get(1).get(2).grid[2] ="                  ";chunks.get(1).get(3).grid[2] ="                  ";chunks.get(1).get(4).grid[2] ="                  ";chunks.get(1).get(5).grid[2] ="                  ";chunks.get(1).get(6).grid[2] ="                  ";chunks.get(1).get(7).grid[2] ="                  ";chunks.get(1).get(8).grid[2] ="                  ";chunks.get(1).get(9).grid[2] ="                  ";chunks.get(1).get(10).grid[2] ="                  ";
-		chunks.get(1).get(0).grid[3]="                  ";chunks.get(1).get(1).grid[3]="                  ";chunks.get(1).get(2).grid[3] ="                  ";chunks.get(1).get(3).grid[3] ="                  ";chunks.get(1).get(4).grid[3] ="                  ";chunks.get(1).get(5).grid[3] ="                  ";chunks.get(1).get(6).grid[3] ="                  ";chunks.get(1).get(7).grid[3] ="                  ";chunks.get(1).get(8).grid[3] ="                  ";chunks.get(1).get(9).grid[3] ="                  ";chunks.get(1).get(10).grid[3] ="                  ";
-		chunks.get(1).get(0).grid[4]="                  ";chunks.get(1).get(1).grid[4]="                  ";chunks.get(1).get(2).grid[4] ="                  ";chunks.get(1).get(3).grid[4] ="                  ";chunks.get(1).get(4).grid[4] ="                  ";chunks.get(1).get(5).grid[4] ="                  ";chunks.get(1).get(6).grid[4] ="                  ";chunks.get(1).get(7).grid[4] ="                  ";chunks.get(1).get(8).grid[4] ="                  ";chunks.get(1).get(9).grid[4] ="                  ";chunks.get(1).get(10).grid[4] ="                  ";
-		
-		chunks.get(2).get(0).grid[0]="                  ";chunks.get(2).get(1).grid[0]="                  ";chunks.get(2).get(2).grid[0] ="                  ";chunks.get(2).get(3).grid[0] ="                  ";chunks.get(2).get(4).grid[0] ="                  ";chunks.get(2).get(5).grid[0] ="                  ";chunks.get(2).get(6).grid[0] ="                  ";chunks.get(2).get(7).grid[0] ="                  ";chunks.get(2).get(8).grid[0] ="                  ";chunks.get(2).get(9).grid[0] ="                  ";chunks.get(2).get(10).grid[0] ="                  ";
-		chunks.get(2).get(0).grid[1]="                  ";chunks.get(2).get(1).grid[1]="                  ";chunks.get(2).get(2).grid[1] ="                  ";chunks.get(2).get(3).grid[1] ="                  ";chunks.get(2).get(4).grid[1] ="                  ";chunks.get(2).get(5).grid[1] ="                  ";chunks.get(2).get(6).grid[1] ="                  ";chunks.get(2).get(7).grid[1] ="                  ";chunks.get(2).get(8).grid[1] ="                  ";chunks.get(2).get(9).grid[1] ="                  ";chunks.get(2).get(10).grid[1] ="                  ";
-		chunks.get(2).get(0).grid[2]="                  ";chunks.get(2).get(1).grid[2]="                  ";chunks.get(2).get(2).grid[2] ="                  ";chunks.get(2).get(3).grid[2] ="                  ";chunks.get(2).get(4).grid[2] ="                  ";chunks.get(2).get(5).grid[2] ="                  ";chunks.get(2).get(6).grid[2] ="                  ";chunks.get(2).get(7).grid[2] ="                  ";chunks.get(2).get(8).grid[2] ="                  ";chunks.get(2).get(9).grid[2] ="                  ";chunks.get(2).get(10).grid[2] ="                  ";
-		chunks.get(2).get(0).grid[3]="                  ";chunks.get(2).get(1).grid[3]="                  ";chunks.get(2).get(2).grid[3] ="                  ";chunks.get(2).get(3).grid[3] ="                  ";chunks.get(2).get(4).grid[3] ="                  ";chunks.get(2).get(5).grid[3] ="                  ";chunks.get(2).get(6).grid[3] ="                  ";chunks.get(2).get(7).grid[3] ="                  ";chunks.get(2).get(8).grid[3] ="                  ";chunks.get(2).get(9).grid[3] ="                  ";chunks.get(2).get(10).grid[3] ="                  ";
-		chunks.get(2).get(0).grid[4]="                  ";chunks.get(2).get(1).grid[4]="                  ";chunks.get(2).get(2).grid[4] ="                  ";chunks.get(2).get(3).grid[4] ="                  ";chunks.get(2).get(4).grid[4] ="                  ";chunks.get(2).get(5).grid[4] ="                  ";chunks.get(2).get(6).grid[4] ="                  ";chunks.get(2).get(7).grid[4] ="                  ";chunks.get(2).get(8).grid[4] ="                  ";chunks.get(2).get(9).grid[4] ="                  ";chunks.get(2).get(10).grid[4] ="                  ";
-		
-		chunks.get(3).get(0).grid[0]="                  ";chunks.get(3).get(1).grid[0]="                  ";chunks.get(3).get(2).grid[0] ="                  ";chunks.get(3).get(3).grid[0] ="                  ";chunks.get(3).get(4).grid[0] ="                  ";chunks.get(3).get(5).grid[0] ="                  ";chunks.get(3).get(6).grid[0] ="                  ";chunks.get(3).get(7).grid[0] ="                  ";chunks.get(3).get(8).grid[0] ="                  ";chunks.get(3).get(9).grid[0] ="                  ";chunks.get(3).get(10).grid[0] ="                  ";
-		chunks.get(3).get(0).grid[1]="                  ";chunks.get(3).get(1).grid[1]="                  ";chunks.get(3).get(2).grid[1] ="                  ";chunks.get(3).get(3).grid[1] ="                  ";chunks.get(3).get(4).grid[1] ="                  ";chunks.get(3).get(5).grid[1] ="                  ";chunks.get(3).get(6).grid[1] ="                  ";chunks.get(3).get(7).grid[1] ="                  ";chunks.get(3).get(8).grid[1] ="                  ";chunks.get(3).get(9).grid[1] ="                  ";chunks.get(3).get(10).grid[1] ="                  ";
-		chunks.get(3).get(0).grid[2]="                  ";chunks.get(3).get(1).grid[2]="                  ";chunks.get(3).get(2).grid[2] ="                  ";chunks.get(3).get(3).grid[2] ="                  ";chunks.get(3).get(4).grid[2] ="                  ";chunks.get(3).get(5).grid[2] ="                  ";chunks.get(3).get(6).grid[2] ="                  ";chunks.get(3).get(7).grid[2] ="                  ";chunks.get(3).get(8).grid[2] ="                  ";chunks.get(3).get(9).grid[2] ="                  ";chunks.get(3).get(10).grid[2] ="                  ";
-		chunks.get(3).get(0).grid[3]="                  ";chunks.get(3).get(1).grid[3]="                  ";chunks.get(3).get(2).grid[3] ="                  ";chunks.get(3).get(3).grid[3] ="                  ";chunks.get(3).get(4).grid[3] ="                  ";chunks.get(3).get(5).grid[3] ="                  ";chunks.get(3).get(6).grid[3] ="                  ";chunks.get(3).get(7).grid[3] ="                  ";chunks.get(3).get(8).grid[3] ="                  ";chunks.get(3).get(9).grid[3] ="                  ";chunks.get(3).get(10).grid[3] ="                  ";
-		chunks.get(3).get(0).grid[4]="                  ";chunks.get(3).get(1).grid[4]="                  ";chunks.get(3).get(2).grid[4] ="                  ";chunks.get(3).get(3).grid[4] ="                  ";chunks.get(3).get(4).grid[4] ="                  ";chunks.get(3).get(5).grid[4] ="                  ";chunks.get(3).get(6).grid[4] ="                  ";chunks.get(3).get(7).grid[4] ="                  ";chunks.get(3).get(8).grid[4] ="                  ";chunks.get(3).get(9).grid[4] ="                  ";chunks.get(3).get(10).grid[4] ="                  ";
-		
-		chunks.get(4).get(0).grid[0]="                  ";chunks.get(4).get(1).grid[0]="                  ";chunks.get(4).get(2).grid[0] ="                  ";chunks.get(4).get(3).grid[0] ="                  ";chunks.get(4).get(4).grid[0] ="                  ";chunks.get(4).get(5).grid[0] ="                  ";chunks.get(4).get(6).grid[0] ="                  ";chunks.get(4).get(7).grid[0] ="                  ";chunks.get(4).get(8).grid[0] ="                  ";chunks.get(4).get(9).grid[0] ="                  ";chunks.get(4).get(10).grid[0] ="                  ";
-		chunks.get(4).get(0).grid[1]="                  ";chunks.get(4).get(1).grid[1]="                  ";chunks.get(4).get(2).grid[1] ="                  ";chunks.get(4).get(3).grid[1] ="                  ";chunks.get(4).get(4).grid[1] ="                  ";chunks.get(4).get(5).grid[1] ="                  ";chunks.get(4).get(6).grid[1] ="                  ";chunks.get(4).get(7).grid[1] ="                  ";chunks.get(4).get(8).grid[1] ="                  ";chunks.get(4).get(9).grid[1] ="                  ";chunks.get(4).get(10).grid[1] ="                  ";
-		chunks.get(4).get(0).grid[2]="                  ";chunks.get(4).get(1).grid[2]="                  ";chunks.get(4).get(2).grid[2] ="                  ";chunks.get(4).get(3).grid[2] ="                  ";chunks.get(4).get(4).grid[2] ="                  ";chunks.get(4).get(5).grid[2] ="                  ";chunks.get(4).get(6).grid[2] ="                  ";chunks.get(4).get(7).grid[2] ="                  ";chunks.get(4).get(8).grid[2] ="                  ";chunks.get(4).get(9).grid[2] ="                  ";chunks.get(4).get(10).grid[2] ="                  ";
-		chunks.get(4).get(0).grid[3]="                  ";chunks.get(4).get(1).grid[3]="                  ";chunks.get(4).get(2).grid[3] ="                  ";chunks.get(4).get(3).grid[3] ="                  ";chunks.get(4).get(4).grid[3] ="                  ";chunks.get(4).get(5).grid[3] ="                  ";chunks.get(4).get(6).grid[3] ="                  ";chunks.get(4).get(7).grid[3] ="                  ";chunks.get(4).get(8).grid[3] ="                  ";chunks.get(4).get(9).grid[3] ="                  ";chunks.get(4).get(10).grid[3] ="                  ";
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 11; j++) {
+				chunks.get(i).get(j).blankify();
+			}
+		}
 		chunks.get(4).get(0).grid[4]="__________________";chunks.get(4).get(1).grid[4]="__________________";chunks.get(4).get(2).grid[4] ="__________________";chunks.get(4).get(3).grid[4] ="__________________";chunks.get(4).get(4).grid[4] ="__________________";chunks.get(4).get(5).grid[4] ="__________________";chunks.get(4).get(6).grid[4] ="__________________";chunks.get(4).get(7).grid[4] ="__________________";chunks.get(4).get(8).grid[4] ="__________________";chunks.get(4).get(9).grid[4] ="__________________";chunks.get(4).get(10).grid[4] ="__________________";
-		
-		chunks.get(5).get(0).grid[0]="                  ";chunks.get(5).get(1).grid[0]="                  ";chunks.get(5).get(2).grid[0] ="                  ";chunks.get(5).get(3).grid[0] ="                  ";chunks.get(5).get(4).grid[0] ="                  ";chunks.get(5).get(5).grid[0] ="                  ";chunks.get(5).get(6).grid[0] ="                  ";chunks.get(5).get(7).grid[0] ="                  ";chunks.get(5).get(8).grid[0] ="                  ";chunks.get(5).get(9).grid[0] ="                  ";chunks.get(5).get(10).grid[0] ="                  ";
-		chunks.get(5).get(0).grid[1]="                  ";chunks.get(5).get(1).grid[1]="                  ";chunks.get(5).get(2).grid[1] ="                  ";chunks.get(5).get(3).grid[1] ="                  ";chunks.get(5).get(4).grid[1] ="                  ";chunks.get(5).get(5).grid[1] ="                  ";chunks.get(5).get(6).grid[1] ="                  ";chunks.get(5).get(7).grid[1] ="                  ";chunks.get(5).get(8).grid[1] ="                  ";chunks.get(5).get(9).grid[1] ="                  ";chunks.get(5).get(10).grid[1] ="                  ";
-		chunks.get(5).get(0).grid[2]="                  ";chunks.get(5).get(1).grid[2]="                  ";chunks.get(5).get(2).grid[2] ="                  ";chunks.get(5).get(3).grid[2] ="                  ";chunks.get(5).get(4).grid[2] ="                  ";chunks.get(5).get(5).grid[2] ="                  ";chunks.get(5).get(6).grid[2] ="                  ";chunks.get(5).get(7).grid[2] ="                  ";chunks.get(5).get(8).grid[2] ="                  ";chunks.get(5).get(9).grid[2] ="                  ";chunks.get(5).get(10).grid[2] ="                  ";
-		chunks.get(5).get(0).grid[3]="                  ";chunks.get(5).get(1).grid[3]="                  ";chunks.get(5).get(2).grid[3] ="                  ";chunks.get(5).get(3).grid[3] ="                  ";chunks.get(5).get(4).grid[3] ="                  ";chunks.get(5).get(5).grid[3] ="                  ";chunks.get(5).get(6).grid[3] ="                  ";chunks.get(5).get(7).grid[3] ="                  ";chunks.get(5).get(8).grid[3] ="                  ";chunks.get(5).get(9).grid[3] ="                  ";chunks.get(5).get(10).grid[3] ="                  ";
-		chunks.get(5).get(0).grid[4]="                  ";chunks.get(5).get(1).grid[4]="                  ";chunks.get(5).get(2).grid[4] ="                  ";chunks.get(5).get(3).grid[4] ="                  ";chunks.get(5).get(4).grid[4] ="                  ";chunks.get(5).get(5).grid[4] ="                  ";chunks.get(5).get(6).grid[4] ="                  ";chunks.get(5).get(7).grid[4] ="                  ";chunks.get(5).get(8).grid[4] ="                  ";chunks.get(5).get(9).grid[4] ="                  ";chunks.get(5).get(10).grid[4] ="                  ";
-		
-		chunks.get(6).get(0).grid[0]="                  ";chunks.get(6).get(1).grid[0]="                  ";chunks.get(6).get(2).grid[0] ="                  ";chunks.get(6).get(3).grid[0] ="                  ";chunks.get(6).get(4).grid[0] ="                  ";chunks.get(6).get(5).grid[0] ="                  ";chunks.get(6).get(6).grid[0] ="                  ";chunks.get(6).get(7).grid[0] ="                  ";chunks.get(6).get(8).grid[0] ="                  ";chunks.get(6).get(9).grid[0] ="                  ";chunks.get(6).get(10).grid[0] ="                  ";
-		chunks.get(6).get(0).grid[1]="                  ";chunks.get(6).get(1).grid[1]="                  ";chunks.get(6).get(2).grid[1] ="                  ";chunks.get(6).get(3).grid[1] ="                  ";chunks.get(6).get(4).grid[1] ="                  ";chunks.get(6).get(5).grid[1] ="                  ";chunks.get(6).get(6).grid[1] ="                  ";chunks.get(6).get(7).grid[1] ="                  ";chunks.get(6).get(8).grid[1] ="                  ";chunks.get(6).get(9).grid[1] ="                  ";chunks.get(6).get(10).grid[1] ="                  ";
-		chunks.get(6).get(0).grid[2]="                  ";chunks.get(6).get(1).grid[2]="                  ";chunks.get(6).get(2).grid[2] ="                  ";chunks.get(6).get(3).grid[2] ="                  ";chunks.get(6).get(4).grid[2] ="                  ";chunks.get(6).get(5).grid[2] ="                  ";chunks.get(6).get(6).grid[2] ="                  ";chunks.get(6).get(7).grid[2] ="                  ";chunks.get(6).get(8).grid[2] ="                  ";chunks.get(6).get(9).grid[2] ="                  ";chunks.get(6).get(10).grid[2] ="                  ";
-		chunks.get(6).get(0).grid[3]="                  ";chunks.get(6).get(1).grid[3]="                  ";chunks.get(6).get(2).grid[3] ="                  ";chunks.get(6).get(3).grid[3] ="                  ";chunks.get(6).get(4).grid[3] ="                  ";chunks.get(6).get(5).grid[3] ="                  ";chunks.get(6).get(6).grid[3] ="                  ";chunks.get(6).get(7).grid[3] ="                  ";chunks.get(6).get(8).grid[3] ="                  ";chunks.get(6).get(9).grid[3] ="                  ";chunks.get(6).get(10).grid[3] ="                  ";
-		chunks.get(6).get(0).grid[4]="                  ";chunks.get(6).get(1).grid[4]="                  ";chunks.get(6).get(2).grid[4] ="                  ";chunks.get(6).get(3).grid[4] ="                  ";chunks.get(6).get(4).grid[4] ="                  ";chunks.get(6).get(5).grid[4] ="                  ";chunks.get(6).get(6).grid[4] ="                  ";chunks.get(6).get(7).grid[4] ="                  ";chunks.get(6).get(8).grid[4] ="                  ";chunks.get(6).get(9).grid[4] ="                  ";chunks.get(6).get(10).grid[4] ="                  ";
-		
-		chunks.get(7).get(0).grid[0]="                  ";chunks.get(7).get(1).grid[0]="                  ";chunks.get(7).get(2).grid[0] ="                  ";chunks.get(7).get(3).grid[0] ="                  ";chunks.get(7).get(4).grid[0] ="                  ";chunks.get(7).get(5).grid[0] ="                  ";chunks.get(7).get(6).grid[0] ="                  ";chunks.get(7).get(7).grid[0] ="                  ";chunks.get(7).get(8).grid[0] ="                  ";chunks.get(7).get(9).grid[0] ="                  ";chunks.get(7).get(10).grid[0] ="                  ";
-		chunks.get(7).get(0).grid[1]="                  ";chunks.get(7).get(1).grid[1]="                  ";chunks.get(7).get(2).grid[1] ="                  ";chunks.get(7).get(3).grid[1] ="                  ";chunks.get(7).get(4).grid[1] ="                  ";chunks.get(7).get(5).grid[1] ="                  ";chunks.get(7).get(6).grid[1] ="                  ";chunks.get(7).get(7).grid[1] ="                  ";chunks.get(7).get(8).grid[1] ="                  ";chunks.get(7).get(9).grid[1] ="                  ";chunks.get(7).get(10).grid[1] ="                  ";
-		chunks.get(7).get(0).grid[2]="                  ";chunks.get(7).get(1).grid[2]="                  ";chunks.get(7).get(2).grid[2] ="                  ";chunks.get(7).get(3).grid[2] ="                  ";chunks.get(7).get(4).grid[2] ="                  ";chunks.get(7).get(5).grid[2] ="                  ";chunks.get(7).get(6).grid[2] ="                  ";chunks.get(7).get(7).grid[2] ="                  ";chunks.get(7).get(8).grid[2] ="                  ";chunks.get(7).get(9).grid[2] ="                  ";chunks.get(7).get(10).grid[2] ="                  ";
-		chunks.get(7).get(0).grid[3]="                  ";chunks.get(7).get(1).grid[3]="                  ";chunks.get(7).get(2).grid[3] ="                  ";chunks.get(7).get(3).grid[3] ="                  ";chunks.get(7).get(4).grid[3] ="                  ";chunks.get(7).get(5).grid[3] ="                  ";chunks.get(7).get(6).grid[3] ="                  ";chunks.get(7).get(7).grid[3] ="                  ";chunks.get(7).get(8).grid[3] ="                  ";chunks.get(7).get(9).grid[3] ="                  ";chunks.get(7).get(10).grid[3] ="                  ";
-		chunks.get(7).get(0).grid[4]="                  ";chunks.get(7).get(1).grid[4]="                  ";chunks.get(7).get(2).grid[4] ="                  ";chunks.get(7).get(3).grid[4] ="                  ";chunks.get(7).get(4).grid[4] ="                  ";chunks.get(7).get(5).grid[4] ="                  ";chunks.get(7).get(6).grid[4] ="                  ";chunks.get(7).get(7).grid[4] ="                  ";chunks.get(7).get(8).grid[4] ="                  ";chunks.get(7).get(9).grid[4] ="                  ";chunks.get(7).get(10).grid[4] ="                  ";
-		
 		String fragmented;
 		int row = 5; int col = 2;
 		for(int i = 0; i < Player.numRoster; i++) {
@@ -178,11 +163,23 @@ public class Battle {
 					row = 6;
 				}
 		}
-		int choicerow = 5; int choicecol = 2;
+		int choicerow = 5; int choicecol = 2; int choice = 0;
 		Scanner scan = new Scanner(System.in);
 		String input = "";
 		while(true) {
 			game.spaces();
+			choice = ((choicerow-5)*3) + ((choicecol-2)/3);
+			try {
+				displayPokemon(user.rosterlist.get(choice), chunks);
+			} catch (Exception e) {
+				for(int i = 0; i < 5; i++) {
+					for(int j = 1; j < 9; j++) {
+						chunks.get(i).get(j).blankify();
+					}
+				}
+				chunks.get(4).get(0).grid[4]="__________________";chunks.get(4).get(1).grid[4]="__________________";chunks.get(4).get(2).grid[4] ="__________________";chunks.get(4).get(3).grid[4] ="__________________";chunks.get(4).get(4).grid[4] ="__________________";chunks.get(4).get(5).grid[4] ="__________________";chunks.get(4).get(6).grid[4] ="__________________";chunks.get(4).get(7).grid[4] ="__________________";chunks.get(4).get(8).grid[4] ="__________________";chunks.get(4).get(9).grid[4] ="__________________";chunks.get(4).get(10).grid[4] ="__________________";
+			
+			}
 			chunks.get(choicerow).get(choicecol).grid[0] = "~~~~~~~~~~~~~~~~~~";chunks.get(choicerow).get(choicecol+1).grid[0] = "~~~               ";
 			chunks.get(choicerow).get(choicecol-1).grid[1] = "                 /";chunks.get(choicerow).get(choicecol+1).grid[1] = "  /               ";
 			chunks.get(choicerow).get(choicecol-1).grid[2] = "                / ";chunks.get(choicerow).get(choicecol+1).grid[2] = " /                ";
@@ -217,8 +214,7 @@ public class Battle {
 			} else if(input.equals("s") && choicerow != 6) {
 				choicerow++;
 			} else if(input.equals("c")) {
-				System.out.println(((choicerow-5)*3) + ((choicecol-2)/3));
-				return ((choicerow-5)*3) + ((choicecol-2)/3);
+				return choice;
 				
 			} else if(input.equals("o")) {
 				break;
@@ -261,13 +257,12 @@ public class Battle {
 					Random ran = new Random();
 					effect.Photosynthesis(user.rosterlist.get(userchoice),enemy,chunks, ran);
 				}
-				
-				effect.inflictDebuff(user.rosterlist.get(userchoice), enemy, chunks);
 			}
 			displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
 			termkey = 0;
 			while(termkey == 0) {
 				game.spaces();
+				System.out.println("sc: " + user.rosterlist.get(userchoice).statuscooldown + " dc: " + user.rosterlist.get(userchoice).debuffcooldown + " ic: " + user.rosterlist.get(userchoice).impactcooldown);
 				displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
 				if(user.rosterlist.get(userchoice).temphp == 0) {
 					mapDialogue(chunks, user.rosterlist.get(userchoice).name + " has fainted!                                                                                                                  > continue                            ");
@@ -311,6 +306,9 @@ public class Battle {
 								if(key == 1) break;
 							} else if(choice == 1) {
 									//rosterz
+									
+								
+								
 									displayMainBattleMenu(user.rosterlist.get(userchoice), enemy, chunks);
 							} else if (choice == 2) {
 									if(choice == 2) {
@@ -334,6 +332,7 @@ public class Battle {
 				}
 			}
 			checkTimers(user.rosterlist.get(userchoice), enemy, chunks, effect); //decrement timers for the user pokemon
+			System.out.println("Debuff: " + user.rosterlist.get(userchoice).debuff);
 			if(enemy.temphp == 0) {
 				mapDialogue(chunks, enemy.name + " has fainted!                                                                                                                  > continue                            ");
 				return 0;
@@ -386,7 +385,7 @@ public class Battle {
 		if(moveChosen != 5) {
 			mapDialogue(map.chunks, attacker.name + " used " + attacker.movesets.get(moveChosen).name + "!                                                           > continue                                    ");
 			if(!(attacker.movesets.get(moveChosen).attackType.equals("Status"))){
-				if(!(defender.status.equals("Evade"))){
+				if(!defender.status.equals("Evade") && !defender.debuff.equals("Camoflauge")){
 						double dmgcalculated = calculateDamage(attacker, defender, moveChosen, map);
 						int dmg = (int)dmgcalculated;
 						//if the speed formula impacts the game, just change it and test please   -past Laz
@@ -400,8 +399,8 @@ public class Battle {
 					} else {
 						mapDialogue(map.chunks, attacker.name +"'s attack missed!                                                                                                                > continue                                    ");
 					}
-				} else {
-					mapDialogue(map.chunks, defender.name + "evaded the attack!                                                                                              > continue                                    ");
+				} else if(defender.status.equals("Evade") || defender.debuff.equals("Camoflauge")){
+					mapDialogue(map.chunks, defender.name + " evaded the attack!                                                                                              > continue                                    ");
 				}
 			} else {
 				//is a status
@@ -416,24 +415,34 @@ public class Battle {
 	}
 	
 	public void checkTimers(Poke p, Poke o, ArrayList<ArrayList<chunk>> chunks,Effect effect) {
+		
+		if(p.impactcooldown > 0) p.impactcooldown--;
+		if(p.debuffcooldown > 0) p.debuffcooldown--;
+		if(p.statuscooldown > 0) p.statuscooldown--;
+		
 		if(p.impacttimer != 0)p.impacttimer--;
-		if(p.impacttimer == 0) {
+		if(p.impacttimer == 0 && !p.impact.equals("")) {
 			effect.inflictImpact(p,o, chunks);
 			p.impact = "";
+			p.impactcooldown = 2;
 		}
 		if(p.statustimer != 0)p.statustimer--;
-		if(p.statustimer == 0) {
+		if(p.statustimer == 0 && !p.status.equals("")) {
 			effect.inflictStatus(p, chunks);
 			p.status = "";
+			p.statuscooldown = 3;
 		}
 		if(p.debufftimer != 0)p.debufftimer--;
-		if(p.debufftimer == 0) {
+		System.out.println("Timer: " +p.debufftimer);
+		if(p.debufftimer == 0 && !p.debuff.equals("")) {
+			System.out.println("Uh oh");
 			if(p.debuff.equals("Photosynthesis")) {
 				
 			} else {
 				effect.inflictDebuff(p,o, chunks);
 			}
 			p.debuff = "";
+			p.debuffcooldown = 2;
 		}
 	}
 	public static double calculateAccuracy(Poke attacker, Poke defender, int movechoice) {
@@ -830,7 +839,7 @@ public class Battle {
 		if(ran.nextInt(1, 255) <= chance) {
 			//initiate capture script
 			try {
-				user.pokedex.addPoke(victim);
+				user.pokedex.add(victim);
 				mapDialogue(chunks, victim.name + " has been successfully caught! Added pokemon to your pokedex!                                                                              ");
 				return 1;
 			} catch(Exception e) {
@@ -1025,20 +1034,20 @@ public class Battle {
 		chunks.get(3).get(8).grid[2] = "  HP: " + enemy.temphp +"/" + enemy.hp;
 		
 		for(int i = 0; i < 18; i++) {
-			if(i >= chunks.get(0).get(2).grid[2].length()) chunks.get(0).get(2).grid[2] += " ";
-			if(i >= chunks.get(0).get(3).grid[2].length()) chunks.get(0).get(3).grid[2] += " ";
-			if(i >= chunks.get(0).get(7).grid[2].length()) chunks.get(0).get(7).grid[2] += " ";
-			if(i >= chunks.get(0).get(8).grid[2].length()) chunks.get(0).get(8).grid[2] += " ";
-			if(i >= chunks.get(0).get(2).grid[3].length()) chunks.get(0).get(2).grid[3] += " ";
-			if(i >= chunks.get(0).get(7).grid[3].length()) chunks.get(0).get(7).grid[3] += " ";
-			if(i >= chunks.get(3).get(3).grid[2].length()) chunks.get(3).get(3).grid[2] += " ";
-			if(i >= chunks.get(3).get(8).grid[2].length()) chunks.get(3).get(8).grid[2] += " ";
-			if(i >= chunks.get(4).get(3).grid[0].length()) chunks.get(4).get(3).grid[0] += " ";
-			if(i >= chunks.get(4).get(3).grid[1].length()) chunks.get(4).get(3).grid[1] += " ";
-			if(i >= chunks.get(4).get(3).grid[2].length()) chunks.get(4).get(3).grid[2] += " ";
-			if(i >= chunks.get(4).get(8).grid[0].length()) chunks.get(4).get(8).grid[0] += " ";
-			if(i >= chunks.get(4).get(8).grid[1].length()) chunks.get(4).get(8).grid[1] += " ";
-			if(i >= chunks.get(4).get(8).grid[2].length()) chunks.get(4).get(8).grid[2] += " ";
+			chunks.get(0).get(2).increaseSpace(i, 2);
+			chunks.get(0).get(3).increaseSpace(i, 2);
+			chunks.get(0).get(7).increaseSpace(i, 2);
+			chunks.get(0).get(8).increaseSpace(i, 2);
+			chunks.get(0).get(2).increaseSpace(i, 3);
+			chunks.get(0).get(7).increaseSpace(i, 3);
+			chunks.get(3).get(3).increaseSpace(i, 2);
+			chunks.get(3).get(8).increaseSpace(i, 2);
+			chunks.get(4).get(3).increaseSpace(i, 0);
+			chunks.get(4).get(3).increaseSpace(i, 1);
+			chunks.get(4).get(3).increaseSpace(i, 2);
+			chunks.get(4).get(8).increaseSpace(i, 0);
+			chunks.get(4).get(8).increaseSpace(i, 1);
+			chunks.get(4).get(8).increaseSpace(i, 2);
 		}
 		
 	}
@@ -1134,7 +1143,160 @@ public class Battle {
 		}	
 	}
 
+public void displayPokemon(Poke p, ArrayList<ArrayList<chunk>> chunks) {
+	for(int i = 0; i < 10; i++) {
+			if(i < 5) {
+				StringBuilder sb3 = new StringBuilder(p.model[i].substring(0,18));
+				StringBuilder sb4 = new StringBuilder(p.model[i].substring(18,36));
+				chunks.get(2).get(4).grid[i] = sb3.toString();
+				chunks.get(2).get(5).grid[i] = sb4.toString();
+			} else {
+				StringBuilder sb3 = new StringBuilder(p.model[i].substring(0,18));
+				StringBuilder sb4 = new StringBuilder(p.model[i].substring(18,36));
+				chunks.get(3).get(4).grid[i-5] = sb3.toString();
+				chunks.get(3).get(5).grid[i-5] = sb4.toString();
+			}
+	}
+	
+	if(p.name.equals("Fizard") || p.name.equals("Bark-Widow")) {
+		for(int i = 0; i < 5; i++) {
+			for(int g = 0; g < 5; g++) {
+				if(i == 4 && g == 4) {
+					chunks.get(i).get(3).grid[g] = "_________________|";
+					chunks.get(i).get(6).grid[g] = "|_________________";
+				} else {
+					chunks.get(i).get(3).grid[g] = "                 |";
+					chunks.get(i).get(6).grid[g] = "|                 ";
+				}
+			}
+		}
+		chunks.get(4).get(6).grid[0] = "|              |__";chunks.get(4).get(7).grid[0] =     "__________________";chunks.get(4).get(8).grid[0] = "_|                ";
+		chunks.get(1).get(6).grid[4] = "|               __";chunks.get(1).get(7).grid[4] =     "__________________";chunks.get(1).get(8).grid[4] =  "_                 ";
+	} else {
+		chunks.get(4).get(6).grid[0] = "               |__";chunks.get(4).get(7).grid[0] =     "__________________";chunks.get(4).get(8).grid[0] = "_|                ";
+		chunks.get(4).get(4).grid[0] = "  ________________";chunks.get(4).get(5).grid[0] = "________________  ";
+		chunks.get(4).get(4).grid[1] = "_                 ";chunks.get(4).get(5).grid[1] = "                 _";
+		chunks.get(4).get(3).grid[2] = "                 _";chunks.get(4).get(6).grid[2] = "_                 ";
+		chunks.get(4).get(3).grid[3] = "                _ ";chunks.get(4).get(6).grid[3] = " _                ";
+		chunks.get(1).get(6).grid[4] = "                __";chunks.get(1).get(7).grid[4] =     "__________________";chunks.get(1).get(8).grid[4] =  "_                 ";
+	}
+	
+	for(int i = 0; i < 5; i++) {
+		if(p.name.equals("Fizard") || p.name.equals("Bark-Widow")) {
+			chunks.get(2).get(6).grid[i] = "|              |: ";
+			chunks.get(3).get(6).grid[i] = "|              |: ";
+		} else {
+			chunks.get(2).get(6).grid[i] = "               |: ";
+			chunks.get(3).get(6).grid[i] = "               |: ";
+		}
+		chunks.get(2).get(8).grid[i] = ":|                ";
+		chunks.get(3).get(8).grid[i] = ":|                ";
+	}
+		chunks.get(2).get(7).grid[1] = p.name;
+		chunks.get(2).get(7).grid[3] = p.type[0] + " " + p.type[1];
+		chunks.get(3).get(7).grid[0] = " Lvl: " + p.level;
+		if(p.defense < p.spDefense) chunks.get(3).get(7).grid[2] = " Weak: Physical";
+		if(p.spDefense < p.defense) chunks.get(3).get(7).grid[2] = " Weak: Special";
+	
+	for(int i = 0; i < 18; i++) {
+		chunks.get(2).get(7).increaseSpace(i, 1);
+		chunks.get(2).get(7).increaseSpace(i, 3);
+		chunks.get(3).get(7).increaseSpace(i, 0);
+		chunks.get(3).get(7).increaseSpace(i, 2);
+	}
+	
+	
 }
+
+
+public static int mapQuestion(ArrayList<ArrayList<chunk>> chunks,String sentence) {
+	// 3, 4, 5, 6, 7, 8
+	chunks.get(5).get(2).grid[0] = " ~~~~~~~~~~~~~~~~~";
+	chunks.get(5).get(2).grid[1] = "|                 ";
+	chunks.get(5).get(2).grid[2] = "|                 ";
+	chunks.get(5).get(2).grid[3] = "|                 ";
+	chunks.get(5).get(2).grid[4] = "|                 ";
+	chunks.get(6).get(2).grid[0] = "|                 ";
+	chunks.get(6).get(2).grid[1] = "|                 ";
+	chunks.get(6).get(2).grid[2] = "|                 ";
+	chunks.get(6).get(2).grid[3] = "|                 ";
+	chunks.get(6).get(2).grid[4] = " ~~~~~~~~~~~~~~~~~";
+	
+	chunks.get(5).get(9).grid[0] = "~~~~~~~~~~~~~~~~~ ";
+	chunks.get(5).get(9).grid[1] = "                 |";
+	chunks.get(5).get(9).grid[2] = "                 |";
+	chunks.get(5).get(9).grid[3] = "                 |";
+	chunks.get(5).get(9).grid[4] = "                 |";
+	chunks.get(6).get(9).grid[0] = "                 |";
+	chunks.get(6).get(9).grid[1] = "                 |";
+	chunks.get(6).get(9).grid[2] = "                 |";
+	chunks.get(6).get(9).grid[3] = "                 |";
+	chunks.get(6).get(9).grid[4] = "~~~~~~~~~~~~~~~~~ ";
+	for(int i = 3; i < 9; i++) {
+		chunks.get(5).get(i).grid[0] = "~~~~~~~~~~~~~~~~~~";
+		chunks.get(5).get(i).grid[1] = "                  ";
+		chunks.get(5).get(i).grid[2] = "                  ";
+		chunks.get(5).get(i).grid[3] = "                  ";
+		chunks.get(5).get(i).grid[4] = "                  ";
+		chunks.get(6).get(i).grid[0] = "                  ";
+		chunks.get(6).get(i).grid[1] = "                  ";
+		chunks.get(6).get(i).grid[2] = "                  ";
+		chunks.get(6).get(i).grid[3] = "                  ";
+		chunks.get(6).get(i).grid[4] = "~~~~~~~~~~~~~~~~~~";
+	}
+	String fragmented = sentence;
+	int end = 18;
+	int chunkCol = 3; int gridRow = 2; int chunkRow = 5;
+	int i = 0;
+	try {
+	for(i = 0; i < sentence.length(); i += 18) {
+		chunks.get(chunkRow).get(chunkCol).grid[gridRow] = sentence.substring(i, end);
+		end += 18;
+		if(end > sentence.length()) {
+			end = sentence.length();
+		}
+		if(chunkCol == 8) {
+			gridRow += 2;
+			if(gridRow == 6) {
+				gridRow = 1;
+				chunkRow++;
+			}
+			chunkCol = 3;
+		} else {
+			chunkCol++;
+		}
+		if(end == sentence.length()) break;
+	}
+		for(int start = i; start <  19; start++) {
+			chunks.get(chunkRow).get(chunkCol).grid[gridRow].concat(" ");
+		}	
+	String arr[] = {" ", " "};
+	String input = "";
+	int pos = 0;
+	Scanner scan = new Scanner(System.in);
+	while(true) {
+		arr[pos] = ">";
+		chunks.get(chunkRow).get(3).grid[3] = arr[0] + " Yes   " + arr[1] + " No      ";
+		printMethod(chunks);
+		input = scan.next();
+		arr[pos] = " ";
+		if(input.equals("c")) {
+			if(pos == 0) return 1;
+			if(pos == 1) return 0;
+		} else if(input.equals("a") && pos == 1) {
+			pos--;
+		} else if(input.equals("d") && pos == 0) {
+			pos++;
+		}
+	}
+	} catch(Exception e) {
+		System.out.println("Could not print dialogue...");
+		return 0;
+	}	
+}
+
+}
+
 
 
 

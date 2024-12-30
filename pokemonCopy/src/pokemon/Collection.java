@@ -20,8 +20,8 @@ public class Collection {
 		pokemonCollection = new HashMap<>();
 		//         name       types     hp  a   sa  d   sd   spe
 		//Starters:
-		addPokemon("Fizard", "Fire", "",60, 50, 80, 40, 80 , 60);
-		pokemonCollection.get("Fizard").setMoves(attacks, "Flame Kick", "Searing Punch", "Flame Ignition", "Meteor Shower", "Swelling Inferno", "ASHES OF POMPEII", "Magma Bound", null);
+		addPokemon("Fizard", "Fire", "",60, 50, 80, 40, 80 , 70);
+		pokemonCollection.get("Fizard").setMoves(attacks, "Tail Whip", "Hide n Lizard", "Flaming Tongue", "Swelling Inferno", "ASHES OF POMPEII", "Magma Bound", null, null);
 		pokemonCollection.get("Fizard").model[0] = "          ___/\\_                    ";
 		pokemonCollection.get("Fizard").model[1] = "        .*. \\ \\ \\___                   ";
 		pokemonCollection.get("Fizard").model[2] = "         '   \\ \\ \\ .*.               ";
@@ -177,7 +177,7 @@ public class Collection {
 		pokemonCollection.get("Bark-Widow").model[7] = "         /\\|______|/\\                ";
 		pokemonCollection.get("Bark-Widow").model[8] = "        /  (_*,,*_)   \\               ";
 		pokemonCollection.get("Bark-Widow").model[9] = "                                    ";
-		addPokemon("Thunder-Bunny", "Grass", "Electric", 40, 75, 35, 30, 75, 110);
+		addPokemon("Thunder-Bunny", "Grass", "Electric", 30, 75, 35, 30, 75, 110);
 		pokemonCollection.get("Thunder-Bunny").setMoves(attacks, "Quick Attack", "Static Beat", "Zappify", "Thunder Clap", null, null, null, null);
 		pokemonCollection.get("Thunder-Bunny").model[0] = "                                     ";
 		pokemonCollection.get("Thunder-Bunny").model[1] = "                                     ";
@@ -189,7 +189,7 @@ public class Collection {
 		pokemonCollection.get("Thunder-Bunny").model[7] = "       (  ,  '  ,   )                   ";
 		pokemonCollection.get("Thunder-Bunny").model[8] = "       \\   , , ,   /                   ";
 		pokemonCollection.get("Thunder-Bunny").model[9] = "      (__/ || || \\__)                ";
-		addPokemon("Lumin-Fox", "Grass", "Electric", 60, 40, 35, 55, 60, 100); 
+		addPokemon("Lumin-Fox", "Grass", "Electric", 30, 40, 35, 55, 60, 100); 
 		pokemonCollection.get("Lumin-Fox").setMoves(attacks, "Quick Attack", "Static Beat", "Volt Smack", "Electrocute", "Voltaic Blast", "Electric Boogaloo", null, null);
 		pokemonCollection.get("Lumin-Fox").model[0] = "                                          ";
 		pokemonCollection.get("Lumin-Fox").model[1] = "                                           ";
@@ -201,7 +201,7 @@ public class Collection {
 		pokemonCollection.get("Lumin-Fox").model[7] = "           / / * \\ \\/ //             ";
 		pokemonCollection.get("Lumin-Fox").model[8] = "          | |:| |:| |//                 ";
 		pokemonCollection.get("Lumin-Fox").model[9] = "          | |:| |:| |/              ";
-		addPokemon("EnerSnail", "Grass", "Electric", 30, 30, 70, 30, 50, 120);
+		addPokemon("EnerSnail", "Grass", "Electric", 20, 30, 70, 30, 50, 120);
 		pokemonCollection.get("EnerSnail").setMoves(attacks, "Quick Attack", "1000 Watts", "Zappify", "Short Circuit", "Ballroom Blitz", null, null, null);
 		pokemonCollection.get("EnerSnail").model[0] = "                                    ";
 		pokemonCollection.get("EnerSnail").model[1] = "                                    ";
@@ -237,23 +237,23 @@ public class Collection {
 }
 
 
-class PokeDex{
-	
-	HashMap<String, Poke> pokedex;
-	
-	PokeDex(){
-		pokedex = new HashMap<>();
-	}
-	
-	public void addPoke(Poke pokemon) {
-		String id = String.valueOf(pokemon.ID);
-		pokedex.put(id, pokemon);
-	}
-	public Poke retrievePoke(int ID) {
-		String id = String.valueOf(ID);
-		return pokedex.get(id);
-	}
-}
+//class PokeDex{
+//	
+//	HashMap<String, Poke> pokedex;
+//	
+//	PokeDex(){
+//		pokedex = new HashMap<>();
+//	}
+//	
+//	public void addPoke(Poke pokemon) {
+//		String id = String.valueOf(pokemon.ID);
+//		pokedex.put(id, pokemon);
+//	}
+//	public Poke retrievePoke(int ID) {
+//		String id = String.valueOf(ID);
+//		return pokedex.get(id);
+//	}
+//}
 
 class basePoke{
 	String name;
